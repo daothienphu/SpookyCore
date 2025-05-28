@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace SpookyCore.EntitySystem
 {
-    public class EntityVisual : EntityComponentBase
+    public class EntityVisual : EntityComponent
     {
         #region Enums
 

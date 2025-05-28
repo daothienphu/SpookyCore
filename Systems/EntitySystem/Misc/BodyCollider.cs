@@ -6,7 +6,7 @@ namespace SpookyCore.EntitySystem
     public class BodyCollider : MonoBehaviour
     {
         public bool HasCollidedWithSomething;
-        public EntityBase CollidedEntity;
+        public Entity CollidedEntity;
         
         private void Start()
         {

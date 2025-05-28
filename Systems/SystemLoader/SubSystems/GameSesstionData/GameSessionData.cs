@@ -48,7 +48,7 @@ namespace SpookyCore.SystemLoader
 
         #region Properties
 
-        public Observable<EntityBase> ObservablePlayer { get; private set; }
+        public Observable<Entity> ObservablePlayer { get; private set; }
         public Camera MainCamera { get; private set; }
         public GameData GameData { get; private set; }
         
@@ -136,7 +136,7 @@ namespace SpookyCore.SystemLoader
         
         #region Public Methods
 
-        public void AssignPlayer(EntityBase player)
+        public void AssignPlayer(Entity player)
         {
             ObservablePlayer.Value = player;
         }
@@ -200,7 +200,7 @@ namespace SpookyCore.SystemLoader
         
         private void InitObservables()
         {
-            ObservablePlayer = new Observable<EntityBase>(null, true);
+            ObservablePlayer = new Observable<Entity>(null, true);
         }
 
         #endregion

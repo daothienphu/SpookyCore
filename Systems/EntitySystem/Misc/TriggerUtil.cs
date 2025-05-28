@@ -16,23 +16,23 @@ namespace SpookyCore.EntitySystem
 
         protected abstract void OnTriggerExit2D(Collider2D other);
 
-        protected bool TryGetEntity(Transform fromTransform, out EntityBase entityBase)
+        protected bool TryGetEntity(Transform fromTransform, out Entity entity)
         {
             if (!fromTransform)
             {
-                entityBase = null;
+                entity = null;
                 return false;
             }
             
             if (fromTransform.CompareTag(GameTags.IgnoredByTriggers))
             {
-                entityBase = null;
+                entity = null;
                 return false;
             }
             
-            return fromTransform.TryGetComponent(out entityBase) || 
-                   (fromTransform.parent && fromTransform.parent.TryGetComponent(out entityBase)) || 
-                   (fromTransform.parent.parent && fromTransform.parent.parent.TryGetComponent(out entityBase));
+            return fromTransform.TryGetComponent(out entity) || 
+                   (fromTransform.parent && fromTransform.parent.TryGetComponent(out entity)) || 
+                   (fromTransform.parent.parent && fromTransform.parent.parent.TryGetComponent(out entity));
         }
     }
 }

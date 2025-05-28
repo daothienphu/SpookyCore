@@ -20,10 +20,10 @@ namespace SpookyCore.EntitySystem
         /// <param name="size">x is the radius of the cone, y is the cone FOV.</param>
         /// <param name="orientation">The orientation of the cone.</param>
         /// <returns></returns>
-        public List<EntityBase> GetTargets(Vector2 center, Vector2 size, float orientation)
+        public List<Entity> GetTargets(Vector2 center, Vector2 size, float orientation)
         {
             var hitCount = Physics2D.OverlapCircle(center, size.x, _filter, _results); 
-            List<EntityBase> targets = new();
+            List<Entity> targets = new();
 
             for (var i = 0; i < hitCount; i++)
             {
@@ -50,7 +50,7 @@ namespace SpookyCore.EntitySystem
         /// <param name="orientation">The orientation of the cone.</param>
         /// <param name="layerMask">Override the default entity LayerMask</param>
         /// <returns></returns>
-        public List<EntityBase> GetTargets(Vector2 center, Vector2 size, float orientation, LayerMask layerMask)
+        public List<Entity> GetTargets(Vector2 center, Vector2 size, float orientation, LayerMask layerMask)
         {
             _filter.layerMask = layerMask;
             var result = GetTargets(center, size, orientation);

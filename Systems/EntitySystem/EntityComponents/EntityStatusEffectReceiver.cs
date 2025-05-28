@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace SpookyCore.EntitySystem
 {
-    public class EntityStatusEffectReceiver : EntityComponentBase
+    public class EntityStatusEffectReceiver : EntityComponent
     {
         #region Fields
 

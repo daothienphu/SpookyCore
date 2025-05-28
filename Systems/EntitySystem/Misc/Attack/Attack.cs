@@ -22,7 +22,7 @@ namespace SpookyCore.EntitySystem
         private readonly EntityAttack _owner;
         private readonly List<IAttackPhase> _phases;
         private int _currentPhaseIndex;
-        private EntityBase _target;
+        private Entity _target;
 
         #endregion
         
@@ -44,7 +44,7 @@ namespace SpookyCore.EntitySystem
         
         #region Public Methods
         
-        public void Start(EntityBase target)
+        public void Start(Entity target)
         {
             _currentPhaseIndex = 0;
             

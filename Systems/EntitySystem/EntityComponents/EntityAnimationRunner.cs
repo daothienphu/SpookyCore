@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace SpookyCore.EntitySystem
 {
-    public class EntityAnimationRunner : EntityComponentBase
+    public class EntityAnimationRunner : EntityComponent
     {
         #region Fields
 

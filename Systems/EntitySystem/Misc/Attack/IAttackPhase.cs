@@ -2,7 +2,7 @@
 {
     public interface IAttackPhase
     {
-        void StartPhase(EntityAttack owner, EntityBase target = null);
+        void StartPhase(EntityAttack owner, Entity target = null);
         
         bool UpdatePhase(EntityAttack owner);
         

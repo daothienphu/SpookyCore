@@ -23,7 +23,7 @@ namespace SpookyCore.Utilities
         
         #region Entity
 
-        public static bool TryGetEntity<T>(this Collision2D collision, out T entityBase) where T : EntityBase
+        public static bool TryGetEntity<T>(this Collision2D collision, out T entityBase) where T : Entity
         {
             var transform = collision.transform;
             transform.TryGetEntity(out var entity);
@@ -36,7 +36,7 @@ namespace SpookyCore.Utilities
             return false;
         }
         
-        public static bool TryGetEntity<T>(this Collider2D collider, out T entityBase) where T : EntityBase
+        public static bool TryGetEntity<T>(this Collider2D collider, out T entityBase) where T : Entity
         {
             var transform = collider.transform;
             transform.TryGetEntity(out var entity);
@@ -53,30 +53,30 @@ namespace SpookyCore.Utilities
         /// Try getting the EntityBase component from a collider.
         /// </summary>
         /// <param name="collider"></param>
-        /// <param name="entityBase"></param>
+        /// <param name="entity"></param>
         /// <returns></returns>
-        public static bool TryGetEntity(this Collider2D collider, out EntityBase entityBase)
+        public static bool TryGetEntity(this Collider2D collider, out Entity entity)
         {
             var transform = collider.transform;
-            return transform.TryGetEntity(out entityBase);
+            return transform.TryGetEntity(out entity);
         }
         
-        public static bool TryGetEntity(this Collision2D collision, out EntityBase entityBase)
+        public static bool TryGetEntity(this Collision2D collision, out Entity entity)
         {
             var transform = collision.transform;
-            return transform.TryGetEntity(out entityBase);
+            return transform.TryGetEntity(out entity);
         }
 
-        public static bool TryGetEntity(this Transform transform, out EntityBase entityBase)
+        public static bool TryGetEntity(this Transform transform, out Entity entity)
         {
             // if (!transform.CompareTag(GameTags.EntityCollider))
             // {
             //     entityBase = null;
             //     return false;
             // }
-            return transform.TryGetComponent(out entityBase) ||
-                   (transform.parent != null && transform.parent.TryGetComponent(out entityBase)) ||
-                   (transform.parent.parent != null && transform.parent.parent.TryGetComponent(out entityBase));
+            return transform.TryGetComponent(out entity) ||
+                   (transform.parent != null && transform.parent.TryGetComponent(out entity)) ||
+                   (transform.parent.parent != null && transform.parent.parent.TryGetComponent(out entity));
         }
 
         #endregion
@@ -94,11 +94,12 @@ namespace SpookyCore.Utilities
         /// <param name="entity"></param>
         /// <param name="otherEntity"></param>
         /// <returns></returns>
-        public static float ColliderDistance(this EntityBase entity, EntityBase otherEntity)
+        public static float ColliderDistance(this Entity entity, Entity otherEntity)
         {
-            var collider = entity.Get<EntityCollider>().Collider;
-            var otherCollider = otherEntity.Get<EntityCollider>().Collider;
-            return collider.ColliderDistance(otherCollider);
+            //var collider = entity.Get<EntityCollider>().Collider;
+            //var otherCollider = otherEntity.Get<EntityCollider>().Collider;
+            //return collider.ColliderDistance(otherCollider);
+            return 0;
         }
 
         /// <summary>

@@ -20,11 +20,11 @@ namespace SpookyCore.EntitySystem
         /// <param name="size">Width and height of the rect.</param>
         /// <param name="orientation">The orientation of the rect.</param>
         /// <returns></returns>
-        public List<EntityBase> GetTargets(Vector2 center, Vector2 size, float orientation)
+        public List<Entity> GetTargets(Vector2 center, Vector2 size, float orientation)
         {
             var hitCount = Physics2D.OverlapBox(center, size, orientation, _filter, _results); 
             
-            List<EntityBase> targets = new();
+            List<Entity> targets = new();
             for (var i = 0; i < hitCount; i++)
             {
                 if (_results[i].TryGetEntity(out var entity))
@@ -44,7 +44,7 @@ namespace SpookyCore.EntitySystem
         /// <param name="orientation">The orientation of the rect.</param>
         /// <param name="layerMask">Override the default entity LayerMask</param>
         /// <returns></returns>
-        public List<EntityBase> GetTargets(Vector2 center, Vector2 size, float orientation, LayerMask layerMask)
+        public List<Entity> GetTargets(Vector2 center, Vector2 size, float orientation, LayerMask layerMask)
         {
             _filter.layerMask = layerMask;
             var result = GetTargets(center, size, orientation);

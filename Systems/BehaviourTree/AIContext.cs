@@ -4,6 +4,6 @@ namespace SpookyCore.BehaviourTree
 {
     public class AIContext
     {
-        public EntityBase Entity;
+        public Entity Entity;
     }
 }

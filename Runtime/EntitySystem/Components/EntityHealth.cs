@@ -1,11 +1,10 @@
-﻿using SpookyCore.SystemLoader;
-using SpookyCore.UISystem;
+﻿using SpookyCore.UISystem;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace SpookyCore.EntitySystem
 {
-    public class EntityHealth : EntityComponentBase
+    public class EntityHealth : EntityComponent
     {
         #region Fields
 
@@ -19,9 +18,8 @@ namespace SpookyCore.EntitySystem
         public override void OnStart()
         {
             base.OnStart();
-            Debug.Log("subscribed");
             Entity.OnEntityStateChanged += OnEntityStateChanged;
-            HealthObservable = new Observable<float>(Entity.Get<EntityData>().FinalStats.MaxHealth);
+            HealthObservable = new Observable<float>(0);//Entity.Get<EntityData>().FinalStats.MaxHealth);
             UpdateHealthBar();
         }
 
@@ -29,7 +27,6 @@ namespace SpookyCore.EntitySystem
         {
             if (Entity)
             {
-                Debug.Log("unsubscribed");
                 Entity.OnEntityStateChanged -= OnEntityStateChanged;
             }
         }
@@ -43,7 +40,7 @@ namespace SpookyCore.EntitySystem
             HealthObservable.Value = Mathf.Max(0, HealthObservable.Value - dmg);
             if (HealthObservable.Value == 0)
             {
-                Entity.SetState(EntityBase.EntityState.Dead);
+                Entity.SetState(Entity.EntityState.Dead);
                 
             }
             UpdateHealthBar();
@@ -57,15 +54,16 @@ namespace SpookyCore.EntitySystem
         {
             switch (ctx.NewState)
             {
-                case EntityBase.EntityState.Spawned:
+                case Entity.EntityState.Spawned:
                     if (_healthBar)
                     {
                         _healthBar.transform.parent.gameObject.SetActive(true);
                     }
-                    HealthObservable.Value = Entity.Get<EntityData>().FinalStats.MaxHealth;
+
+                    HealthObservable.Value = 0;//Entity.Get<EntityData>().FinalStats.MaxHealth;
                     UpdateHealthBar();
                     break;
-                case EntityBase.EntityState.Dead:
+                case Entity.EntityState.Dead:
                 {
                     //_healthBar is only the health part, the parent will also contain the health bar background. 
                     if (_healthBar)
@@ -92,7 +90,7 @@ namespace SpookyCore.EntitySystem
         {
             if (_healthBar)
             {
-                _healthBar.fillAmount = HealthObservable.Value / Entity.Get<EntityData>().FinalStats.MaxHealth;
+                _healthBar.fillAmount = 0; //HealthObservable.Value / Entity.Get<EntityData>().FinalStats.MaxHealth;
             }
         }
 

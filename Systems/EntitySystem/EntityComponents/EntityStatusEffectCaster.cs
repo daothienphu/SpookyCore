@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace SpookyCore.EntitySystem
 {
-    public class EntityStatusEffectCaster : EntityComponentBase
+    public class EntityStatusEffectCaster : EntityComponent
     {
         [SerializeField] private StatusEffectConfig _statusEffectConfig;
         private float _timer;

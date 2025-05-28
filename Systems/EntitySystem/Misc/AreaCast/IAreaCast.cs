@@ -5,8 +5,8 @@ namespace SpookyCore.EntitySystem
 {
     public interface IAreaCast
     {
-        List<EntityBase> GetTargets(Vector2 center, Vector2 size, float orientation);
+        List<Entity> GetTargets(Vector2 center, Vector2 size, float orientation);
 
-        List<EntityBase> GetTargets(Vector2 center, Vector2 size, float orientation, LayerMask layerMask);
+        List<Entity> GetTargets(Vector2 center, Vector2 size, float orientation, LayerMask layerMask);
     }
 }

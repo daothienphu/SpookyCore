@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace SpookyCore.EntitySystem
 {
-    public class EntityCuller : EntityComponentBase
+    public class EntityCuller : EntityComponent
     {
         public bool ShouldBeCulled;
         public bool HasJustChangedCullState;
@@ -13,7 +13,7 @@ namespace SpookyCore.EntitySystem
         
         public override void OnStart()
         {
-            _bounds = Entity.Get<EntityCollider>().Collider.bounds;
+            //_bounds = Entity.Get<EntityCollider>().Collider.bounds;
             _cullerSystem = FrustumCullerSystem.Instance;
         }
 

@@ -19,7 +19,7 @@ namespace SpookyCore.EntitySystem
 
         #region Fields
 
-        protected EntityBase Entity;
+        protected Entity Entity;
         protected Animator Animator;
         protected string AnimationName;
         private Action _onExitCallback;
@@ -37,7 +37,7 @@ namespace SpookyCore.EntitySystem
 
         #region Public Methods
 
-        public virtual void Enter(EntityBase entity, float transitionTime)
+        public virtual void Enter(Entity entity, float transitionTime)
         {
             if (AnimationName == "")
             {

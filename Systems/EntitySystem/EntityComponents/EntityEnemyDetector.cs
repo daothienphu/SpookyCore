@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace SpookyCore.EntitySystem
 {
-    public class EntityEnemyDetector : EntityComponentBase
+    public class EntityEnemyDetector : EntityComponent
     {
         #region Fields
 
@@ -23,7 +23,7 @@ namespace SpookyCore.EntitySystem
         #region Properties
 
         [ReadOnly] public bool HasDetectedEnemy;
-        [ReadOnly] public EntityBase EnemyTarget;
+        [ReadOnly] public Entity EnemyTarget;
         [ReadOnly] public float SqrDistanceToEnemy;
 
         #endregion
@@ -38,7 +38,7 @@ namespace SpookyCore.EntitySystem
             _collider = _enemyDetector.GetComponent<Collider2D>();
             if (_collider is CircleCollider2D circleCollider2D)
             {
-                circleCollider2D.radius = Entity.Get<EntityData>().FinalStats.DetectionRange;
+                circleCollider2D.radius = 0;//Entity.Get<EntityData>().FinalStats.DetectionRange;
                 _viewDistance = circleCollider2D.radius;
             }
         }

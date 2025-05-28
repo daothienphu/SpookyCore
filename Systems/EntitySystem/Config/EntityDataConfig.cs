@@ -15,9 +15,6 @@ namespace SpookyCore.EntitySystem
         
         public float AttackRange = 2;
         public float DetectionRange = 3;
-        
-        public float ComfortableLowerLimit = -1;
-        public float ComfortableUpperLimit = -10;
     }
     
     [System.Serializable]

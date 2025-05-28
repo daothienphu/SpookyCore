@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace SpookyCore.EntitySystem
 {
-    public abstract class EntityBase : MonoBehaviour, IPoolable
+    public abstract class Entity : MonoBehaviour, IPoolable
     {
         #region Events
 
@@ -31,10 +31,10 @@ namespace SpookyCore.EntitySystem
 
         [field: SerializeField] public EntityID ID { get; private set; }
         [field: SerializeField] public EntityState State { get; private set; }
-        [SerializeField] private bool _useEventAwakeAndStart = false;
-        [SerializeField] private List<EntityComponentBase> _componentsList = new();  
+        [SerializeField] private bool _useUnityAwakeAndStart;
+        [SerializeField] private List<EntityComponent> _componentsList = new();  
         
-        private Dictionary<Type, EntityComponentBase> _componentsDict = new();
+        private Dictionary<Type, EntityComponent> _componentsDict = new();
         public AIContext AIContext;
         
         private EntityStateEvent _entityStateEvent;
@@ -49,14 +49,14 @@ namespace SpookyCore.EntitySystem
         
         private void Awake()
         {
-            if (!_useEventAwakeAndStart) return;
+            if (!_useUnityAwakeAndStart) return;
             OnAwake();
             SetState(EntityState.Spawned);
         }
         
         private void Start()
         {
-            if (!_useEventAwakeAndStart) return;
+            if (!_useUnityAwakeAndStart) return;
             OnStart();
             SetState(EntityState.Alive);
         }
@@ -96,8 +96,15 @@ namespace SpookyCore.EntitySystem
         /// </summary>
         protected virtual void OnAwake()
         {
-            Init();
-            CacheComponents();
+            if (ID == EntityID.MISSING_ID)
+            {
+                Debug.LogError($"Unassigned Entity ID in {name}");
+            }
+
+            _entityStateEvent = new EntityStateEvent(EntityState.Default, EntityState.Default);
+            _poolSystem = PoolSystem.Instance;
+            
+            RefreshComponentsCache();
             
             foreach (var component in _componentsList)
             {
@@ -169,7 +176,7 @@ namespace SpookyCore.EntitySystem
 
         #region Public Methods
 
-        public T Get<T>() where T : EntityComponentBase
+        public T Get<T>() where T : EntityComponent
         {
             var componentType = typeof(T);
 
@@ -181,7 +188,7 @@ namespace SpookyCore.EntitySystem
             return null;
         }
 
-        public bool TryGet<T>(out T component) where T : EntityComponentBase
+        public bool TryGet<T>(out T component) where T : EntityComponent
         {
             var componentType = typeof(T);
 
@@ -195,50 +202,27 @@ namespace SpookyCore.EntitySystem
             return false;
         }
 
-        public bool AddComponent(EntityComponentBase component)
-        {
-            if (component == null)
-            {
-                return false;
-            }
-            var componentType = component.GetType();
-
-            if (!_componentsDict.ContainsKey(componentType))
-            {
-                _componentsDict[componentType] = component;
-                RefreshComponentsList();
-            }
-
-            return true;
-        }
-
-        public void RemoveComponent(EntityComponentBase component)
-        {
-            var componentType = component.GetType();
-            
-            if (_componentsDict.ContainsKey(componentType))
-            {
-                _componentsDict.Remove(componentType);
-                RefreshComponentsList();
-            }
-        }
-
-        public void RefreshComponentsList()
+        public void RefreshComponentsCache()
         {
             _componentsDict.Clear();
-            _componentsDict = new Dictionary<Type, EntityComponentBase>();
-            var components = GetComponents<EntityComponentBase>();
+            _componentsDict = new Dictionary<Type, EntityComponent>();
+            var components = GetComponents<EntityComponent>();
             foreach (var c in components)
             {
                 _componentsDict.Add(c.GetType(), c);
             }
             
             _componentsList.Clear();
-            _componentsList = new List<EntityComponentBase>();
+            _componentsList = new List<EntityComponent>();
             foreach (var c in _componentsDict.Values)
             {
                 _componentsList.Add(c);
             }
+        }
+
+        public List<EntityComponent> GetAllComponents()
+        {
+            return _componentsList;
         }
 
         public void SetState(EntityState newState)
@@ -248,7 +232,6 @@ namespace SpookyCore.EntitySystem
             switch (newState)
             {
                 case EntityState.Spawned:
-                    break;
                 case EntityState.Alive:
                     break;
                 case EntityState.Dead:
@@ -274,43 +257,6 @@ namespace SpookyCore.EntitySystem
         public virtual void LoadGameData(PlayerData playerData)
         {
             
-        }
-
-        #endregion
-
-        #region Private Methods
-
-        private void Init()
-        {
-            if (ID == EntityID.MISSING_ID)
-            {
-                Debug.LogError($"Unassigned Entity ID in {name}");
-            }
-            
-            _entityStateEvent = new EntityStateEvent(EntityState.Default, EntityState.Default);
-            _poolSystem = PoolSystem.Instance;
-        }
-        
-        private void CacheComponents()
-        {
-            var i = 0;
-            while (i < _componentsList.Count)
-            {
-                var component = _componentsList[i];
-                if (!component.enabled)
-                {
-                    Debug.Log($"Component {component.name} was manually disabled on entity {name}. It may cause some errors.");
-                    continue;
-                }
-                if (!AddComponent(component))
-                {
-                    _componentsList.RemoveAt(i);
-                }
-                else
-                {
-                    i++;
-                }
-            }
         }
 
         #endregion

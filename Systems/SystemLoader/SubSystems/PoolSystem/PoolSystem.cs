@@ -10,7 +10,7 @@ namespace SpookyCore.SystemLoader
     public class PoolSystem : MonoSingleton<PoolSystem>
     {
         [SerializeField] private PoolObjectsConfig _poolConfig;
-        private Dictionary<EntityID, ObjectPool<EntityBase>> _pools = new();
+        private Dictionary<EntityID, ObjectPool<Entity>> _pools = new();
         
         private EntityDatabase _entityDatabase;
 
@@ -41,7 +41,7 @@ namespace SpookyCore.SystemLoader
             if (!_pools.ContainsKey(id))
             {
                 var parentGO = new GameObject($"{id}");
-                _pools[id] = new ObjectPool<EntityBase>(prefab, size, parentGO.transform);
+                _pools[id] = new ObjectPool<Entity>(prefab, size, parentGO.transform);
             }
         }
 
@@ -53,7 +53,7 @@ namespace SpookyCore.SystemLoader
         /// <param name="getPreviewVersion"> Get the preview version of an entity, the preview version will stop its life cycle after OnAwake</param>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public T Get<T>(EntityID id, Action<EntityBase> onGetCallback = null, bool getPreviewVersion = false) where T : EntityBase
+        public T Get<T>(EntityID id, Action<Entity> onGetCallback = null, bool getPreviewVersion = false) where T : Entity
         {
             if (!_pools.TryGetValue(id, out var pool))
             {
@@ -72,7 +72,7 @@ namespace SpookyCore.SystemLoader
             return pool?.Get(onGetCallback: onGetCallback, getPreviewVersion: getPreviewVersion) as T;
         }
 
-        public void Return<T>(EntityID id, T obj) where T : EntityBase
+        public void Return<T>(EntityID id, T obj) where T : Entity
         {
             if (_pools.TryGetValue(id, out var pool))
             {

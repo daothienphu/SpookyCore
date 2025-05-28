@@ -7,14 +7,14 @@ namespace SpookyCore.EntitySystem
     public class EnemyDetector : TriggerUtil
     {
         [SerializeField] private LayerMask DetectionLayer;
-        [field: SerializeField] public List<EntityBase> FoundTargets;
+        [field: SerializeField] public List<Entity> FoundTargets;
         private Collider2D _collider2D;
 
         protected override void Start()
         {
             base.Start();
             _collider2D = GetComponent<Collider2D>();
-            FoundTargets = new List<EntityBase>();
+            FoundTargets = new List<Entity>();
         }
 
         public void ToggleColliders(bool isEnabled)

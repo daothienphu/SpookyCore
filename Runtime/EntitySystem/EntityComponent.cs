@@ -4,11 +4,11 @@ using System;
 namespace SpookyCore.EntitySystem
 {
     [Serializable]
-    public abstract class EntityComponentBase : MonoBehaviour
+    public abstract class EntityComponent : MonoBehaviour
     {
-        public EntityBase Entity { get; private set; }
+        public Entity Entity { get; private set; }
 
-        public void Init(EntityBase entity)
+        public void Init(Entity entity)
         {
             Entity = entity;
         }

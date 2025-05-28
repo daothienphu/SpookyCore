@@ -7,7 +7,7 @@ using Random = UnityEngine.Random;
 
 namespace SpookyCore.EntitySystem
 {
-    public class EntityItemDropper : EntityComponentBase
+    public class EntityItemDropper : EntityComponent
     {
         #region Fields
 
