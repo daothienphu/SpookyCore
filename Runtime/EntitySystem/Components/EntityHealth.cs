@@ -1,25 +1,30 @@
-﻿using SpookyCore.UISystem;
+﻿using SpookyCore.EntitySystem.Utils.Stat;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace SpookyCore.EntitySystem
 {
+    [RequireComponent(typeof(EntityStat))]
     public class EntityHealth : EntityComponent
     {
         #region Fields
 
-        public Observable<float> HealthObservable;
-        [SerializeField] private Image _healthBar;
+        public float Health;
+        public Slider HealthBar;
+
+        private EntityStat _stat;
 
         #endregion
 
         #region Life Cycle
 
-        public override void OnStart()
+        public override void OnAwake()
         {
-            base.OnStart();
+            _stat = Entity.Get<EntityStat>();
+            
             Entity.OnEntityStateChanged += OnEntityStateChanged;
-            HealthObservable = new Observable<float>(0);//Entity.Get<EntityData>().FinalStats.MaxHealth);
+
+            Health = _stat.GetStats<EntityStatConfig>().Health.Current;
             UpdateHealthBar();
         }
 
@@ -35,15 +40,15 @@ namespace SpookyCore.EntitySystem
 
         #region Public Methods
 
-        public virtual void TakeDamage(EntityID damageDealer, float dmg)
+        public virtual void TakeDamage(EntityID damageSource, float dmg)
         {
-            HealthObservable.Value = Mathf.Max(0, HealthObservable.Value - dmg);
-            if (HealthObservable.Value == 0)
+            Health = Mathf.Max(0, Health - dmg);
+            UpdateHealthBar();
+            
+            if (Health <= 0)
             {
                 Entity.SetState(Entity.EntityState.Dead);
-                
             }
-            UpdateHealthBar();
         }
 
         #endregion
@@ -55,43 +60,25 @@ namespace SpookyCore.EntitySystem
             switch (ctx.NewState)
             {
                 case Entity.EntityState.Spawned:
-                    if (_healthBar)
-                    {
-                        _healthBar.transform.parent.gameObject.SetActive(true);
-                    }
+                {
+                    HealthBar?.gameObject.SetActive(true);
 
-                    HealthObservable.Value = 0;//Entity.Get<EntityData>().FinalStats.MaxHealth;
+                    Health = Entity.Get<EntityStat>().GetStats<EntityStatConfig>().Health.Current;
                     UpdateHealthBar();
                     break;
+                }
                 case Entity.EntityState.Dead:
                 {
-                    //_healthBar is only the health part, the parent will also contain the health bar background. 
-                    if (_healthBar)
-                    {
-                        _healthBar.transform.parent.gameObject.SetActive(false);
-                    }
-                    
-                    if (Entity.TryGet<EntityAnimationRunner>(out var animationRunner))
-                    {
-                        //animationRunner.TransitionTo(GameAnimation.IsDead);
-                    }
-
-                    if (Entity.TryGet<EntityItemDropper>(out var itemDropper))
-                    {
-                        itemDropper.DropItems();
-                    }
-                    
+                    HealthBar?.gameObject.SetActive(false);
                     break;
                 }
             }
         }
 
-        private void UpdateHealthBar()
+        protected virtual void UpdateHealthBar()
         {
-            if (_healthBar)
-            {
-                _healthBar.fillAmount = 0; //HealthObservable.Value / Entity.Get<EntityData>().FinalStats.MaxHealth;
-            }
+            if (!HealthBar) return;
+            HealthBar.value = Health / _stat.GetStats<EntityStatConfig>().Health.Current;
         }
 
         #endregion

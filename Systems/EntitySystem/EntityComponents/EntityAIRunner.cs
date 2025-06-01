@@ -37,7 +37,6 @@ namespace SpookyCore.EntitySystem
             {
                 _behaviorTreeUpdateTimer = 0;
                 CurrentState = MainTree.Execute(Entity.AIContext);
-                //Debug.Log($"executed tree: {state}");
             }
         }
 
@@ -55,84 +54,8 @@ namespace SpookyCore.EntitySystem
             }
 
             MainTree = treeBuilder.End().Build();
-            //_mainTree.LogTree();
         }
 
         #endregion
-        
-        //FROM OLD IMPLEMENTATION
-        // [field: SerializeField] public BehaviorTree MainTree;
-        // [SerializeField] private List<BehaviorTree> _subTrees = new();
-        // [SerializeField] private int _ticksPerSecond;
-        //
-        // private float _timeBetweenTicks;
-        // private float _timer;
-        //
-        // public override void OnStart()
-        // {
-        //     base.OnStart();
-        //     _timeBetweenTicks = 1f / _ticksPerSecond;
-        // }
-        //
-        // public override void OnUpdate()
-        // {
-        //     base.OnUpdate();
-        //     if (MainTree == null)
-        //     {
-        //         Debug.Log("Main tree is null");
-        //         return;
-        //     }
-        //     _timer -= Time.deltaTime;
-        //     
-        //     if (_timer <= 0)
-        //     {
-        //         MainTree.Evaluate();
-        //         _timer = _timeBetweenTicks;
-        //     }
-        // }
-        //
-        // public void RebuildTree()
-        // {
-        //     RootNode root;
-        //     if (MainTree.Root == null)
-        //     {
-        //         root = MainTree.CreateNode(typeof(RootNode), Vector2.zero) as RootNode;
-        //         MainTree.Root = root;
-        //     }
-        //     else
-        //     {
-        //         root = MainTree.Root as RootNode;
-        //     }
-        //     
-        //     SelectorNode selectorNode;
-        //     if (root.Child == null)
-        //     {
-        //         selectorNode = MainTree.CreateNode(typeof(SelectorNode), Vector2.zero) as SelectorNode;
-        //         MainTree.AddChild(MainTree.Root, selectorNode);
-        //     }
-        //     else
-        //     {
-        //         selectorNode = root.Child as SelectorNode;
-        //     }
-        //     
-        //     if (selectorNode.Children is { Count: > 0 })
-        //     {
-        //         foreach (var child in selectorNode.Children)
-        //         {
-        //             if (child != null)
-        //             {
-        //                 AssetDatabase.RemoveObjectFromAsset(child);
-        //             }
-        //         }
-        //     }
-        //
-        //     selectorNode.Children = new();
-        //     
-        //     foreach (var tree in _subTrees)
-        //     {
-        //         MainTree.SubTree(selectorNode, tree);
-        //     }
-        //     AssetDatabase.SaveAssets();
-        // }
     }
 }

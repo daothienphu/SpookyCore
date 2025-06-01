@@ -1,60 +1,74 @@
-﻿using System.Globalization;
-using UnityEditor;
+﻿using UnityEditor;
 using UnityEngine;
+using System.Reflection;
 using SpookyCore.EntitySystem;
 using SpookyCore.EntitySystem.Utils.Stat;
 
 namespace SpookyCore.Editor.EntitySystem
 {
     [CustomEditor(typeof(EntityStat), true)]
-    public class EntityStatEditor : UnityEditor.Editor
+    public class EntityStatEditor : EntityComponentEditor
     {
         private EntityStat _stat;
-        private SerializedProperty _configProperty;
 
-        private void OnEnable()
+        protected override void OnEnable()
         {
+            base.OnEnable();
             _stat = (EntityStat)target;
-
-            // if (Application.isPlaying)
-            // {
-            //     _stat.InitializeRuntimeData();
-            // }
         }
 
         public override void OnInspectorGUI()
         {
-            DrawDefaultInspector();
-            if (!_stat.Stats)
+            base.OnInspectorGUI();
+            
+            serializedObject.Update();
+
+            var statProp = serializedObject.FindProperty("_statConfig");
+            if (statProp == null)
+            {
+                serializedObject.ApplyModifiedProperties();
+                return;
+            }
+            
+            var stat = statProp.objectReferenceValue as EntityStatConfig;
+            if (!stat)
             {
                 EditorGUILayout.HelpBox("Please assign a config derived from EntityStatConfig.", MessageType.Error);
             }
             else
             {
-                DrawStatList();
+                EditorGUILayout.Space(10);
+                
+                EditorGUILayout.LabelField("Stats", EditorStyles.boldLabel);
+                EditorGUI.indentLevel++;
+                DrawStatList(stat);
+                EditorGUI.indentLevel--;
             }
+
+            serializedObject.ApplyModifiedProperties();
         }
 
-        private void DrawStatList()
+        private void DrawStatList(EntityStatConfig config)
         {
-            var data = _stat.GetData<EntityStatConfig>();
-            if (!data)
-            {
-                EditorGUILayout.HelpBox("Runtime stat data not initialized. Enter Play Mode to see values.",
-                    MessageType.Info);
-                return;
-            }
+            var props = config.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
 
-            EditorGUILayout.Space(10);
-            EditorGUILayout.LabelField("Runtime Stats", EditorStyles.boldLabel);
-
-            foreach (var stat in data.GetAllStats())
+            foreach (var prop in props)
             {
-                EditorGUILayout.BeginVertical("box");
-                EditorGUILayout.LabelField(stat.GetType().Name, EditorStyles.boldLabel);
-                EditorGUILayout.LabelField("Base Value", stat.BaseValue.ToString(CultureInfo.InvariantCulture));
-                EditorGUILayout.LabelField("Current Value", stat.CurrentValue.ToString(CultureInfo.InvariantCulture));
-                //EditorGUILayout.LabelField("Modifiers", stat.ModifiersCount.ToString());
+                if (prop.PropertyType != typeof(Stat)) continue;
+                
+                if (!prop.CanRead) continue;
+                
+                if (prop.GetValue(config) is not Stat stat) continue;
+
+                EditorGUILayout.BeginVertical(GUI.skin.box);
+                EditorGUILayout.LabelField(ObjectNames.NicifyVariableName(prop.Name), EditorStyles.boldLabel);
+
+                EditorGUI.BeginDisabledGroup(true);
+                EditorGUILayout.FloatField("Base", stat.Base);
+                EditorGUILayout.FloatField("Current", stat.Current);
+                EditorGUI.EndDisabledGroup();
+                //Modifiers here
+
                 EditorGUILayout.EndVertical();
             }
         }

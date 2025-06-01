@@ -9,6 +9,7 @@ namespace SpookyCore.Editor.EntitySystem
     public class EntityColliderEditor : EntityComponentEditor
     {
         private EntityCollider _collider;
+        private readonly string _requiredPath = "Collider/MainCollider";
         
         protected override void OnEnable()
         {
@@ -16,21 +17,33 @@ namespace SpookyCore.Editor.EntitySystem
             
             _collider = (EntityCollider)target;
 
-            AddCollider();
+            CheckAssignReferencesOnEnable(_requiredPath);
         }
         
         public override void OnInspectorGUI()
         {
             base.OnInspectorGUI();
+            
+            if (!_collider._colliderListener)
+            {
+                EditorGUILayout.HelpBox("Please assign a Collider Listener.", MessageType.Error);
+            }
+            
+            CheckBuildingHierarchyOnInspectorGUI(_requiredPath, "Build Collider Hierarchy");
+            
+            DrawCollisionDetails();
+        }
 
+        private void DrawCollisionDetails()
+        {
             EditorGUILayout.Space(10);
-            EditorGUILayout.LabelField("Collision Info", EditorStyles.boldLabel);
-
+            EditorGUILayout.LabelField("Collision Info (Entities Only)", EditorStyles.boldLabel);
+            
             EditorGUILayout.Toggle("Has Collided", _collider.HasCollided);
-
+            
             var collided = _collider.CollidedEntity;
             EditorGUILayout.ObjectField("First Collided Entity", collided ? collided.gameObject : null, typeof(GameObject), true);
-
+            
             EditorGUILayout.LabelField("All Collided Entities:");
             EditorGUI.indentLevel++;
             foreach (var entity in _collider.CollidedEntities)
@@ -40,70 +53,24 @@ namespace SpookyCore.Editor.EntitySystem
             EditorGUI.indentLevel--;
         }
 
-        private void AddCollider()
+        protected override void AssignReferences(Transform downMostTransform)
         {
-            if (!_entity)
-            {
-                return;
-            }
-
-            var collider = _entity.transform.Find("Collider");
-            var mainCollider = collider ? collider.Find("MainCollider") : null;
-
-            if (collider && mainCollider)
-            {
-                InjectColliderListener(mainCollider);
-                return;
-            }
-            
-            CreateColliderHierarchy(collider, mainCollider);
-        }
-
-        private void CreateColliderHierarchy(Transform collider, Transform mainCollider)
-        {
-            Undo.SetCurrentGroupName("Setup EntityCollider Hierarchy");
-            var group = Undo.GetCurrentGroup();
-            
-            if (!collider)
-            {
-                var colliderGO = new GameObject("Collider");
-                Undo.RegisterCreatedObjectUndo(colliderGO, "Create Collider");
-                collider = colliderGO.transform;
-                collider.SetParent(_entity.transform);
-                collider.localPosition = Vector3.zero;
-            }
-            
-            if (!mainCollider)
-            {
-                var mainColliderGO = new GameObject("MainCollider");
-                Undo.RegisterCreatedObjectUndo(mainColliderGO, "Create MainCollider");
-                mainCollider = mainColliderGO.transform;
-                mainCollider.SetParent(collider);
-                mainCollider.localPosition = Vector3.zero;
-            }
-
-            Undo.CollapseUndoOperations(group);
-
-            Debug.Log($"EntityCollider of {_entity.name} created hierarchy:\n{_entity.name}\n└── {collider.name}\n    └── {mainCollider.name}", mainCollider);
-            
-            InjectColliderListener(mainCollider);
-        }
-
-        private void InjectColliderListener(Transform mainCollider)
-        {
-            var c2D = mainCollider.GetComponent<Collider2D>();
+            var c2D = downMostTransform.GetComponent<Collider2D>();
             if (!c2D)
             {
-                c2D = Undo.AddComponent<BoxCollider2D>(mainCollider.gameObject);
+                Undo.AddComponent<BoxCollider2D>(downMostTransform.gameObject);
             }
             
-            var listener = mainCollider.GetComponent<ColliderListener>();
+            var listener = downMostTransform.GetComponent<ColliderListener>();
             if (!listener)
             {
-                listener = Undo.AddComponent<ColliderListener>(mainCollider.gameObject);
+                listener = Undo.AddComponent<ColliderListener>(downMostTransform.gameObject);
             }
 
-            listener.ParentCollider = (EntityCollider)target;
+            listener.ParentEntityCollider = _collider;
+            _collider._colliderListener = listener;
+            EditorUtility.SetDirty(_collider.gameObject);
+            AssetDatabase.SaveAssets();
         }
     }
 }

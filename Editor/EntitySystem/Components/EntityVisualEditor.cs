@@ -1,4 +1,5 @@
-﻿using SpookyCore.EntitySystem;
+﻿using System.IO;
+using SpookyCore.EntitySystem;
 using UnityEditor;
 using UnityEngine;
 
@@ -8,61 +9,52 @@ namespace SpookyCore.Editor.EntitySystem
     public class EntityVisualEditor : EntityComponentEditor
     {
         private EntityVisual _visual;
+        private readonly string _requiredPath = "Visual/MainVisual";
+        private static string _defaultSpritePath = "";
         
         protected override void OnEnable()
         {
             base.OnEnable();
             
             _visual = (EntityVisual)target;
-            
-            AddVisual();
+            if (_defaultSpritePath == "")
+            {
+                _defaultSpritePath = Path.Combine(SpookyPathResolver.GetSpookyCorePath(), "Runtime/EntitySystem/Utils/Visual/DefaultSprite.png");
+            }
+
+            CheckAssignReferencesOnEnable(_requiredPath);
         }
 
-        private void AddVisual()
+        public override void OnInspectorGUI()
         {
-            if (!_entity)
-            {
-                return;
-            }
+            base.OnInspectorGUI();
 
-            var visual = _entity.transform.Find("Visual");
-            var mainVisual = visual ? visual.Find("MainVisual") : null;
-            
-            if (visual && mainVisual)
+            if (!_visual.MainVisualRenderer || !_visual.MainVisualTransform)
             {
-                _visual.VisualTransform = mainVisual;
-                return;
+                EditorGUILayout.HelpBox("Please assign both MainVisualTransform and MainVisualRenderer.", MessageType.Error);
             }
             
-            CreateVisualHierarchy(visual, mainVisual);
+            CheckBuildingHierarchyOnInspectorGUI(_requiredPath, "Build Visual Hierarchy");
         }
 
-        private void CreateVisualHierarchy(Transform visual, Transform mainVisual)
+        protected override void AssignReferences(Transform downMostTransform)
         {
-            Undo.SetCurrentGroupName("Setup EntityVisual Hierarchy");
-            var group = Undo.GetCurrentGroup();
+            _visual.MainVisualTransform = downMostTransform;
             
-            if (!visual)
+            var spriteRenderer = downMostTransform.GetComponent<SpriteRenderer>();
+            if (!spriteRenderer)
             {
-                var visualGO = new GameObject("Visual");
-                Undo.RegisterCreatedObjectUndo(visualGO, "Create Visual");
-                visual = visualGO.transform;
-                visual.SetParent(_entity.transform);
-                visual.localPosition = Vector3.zero;
-            }
-            
-            if (!mainVisual)
-            {
-                var mainVisualGO = new GameObject("MainVisual");
-                Undo.RegisterCreatedObjectUndo(mainVisualGO, "Create MainVisual");
-                mainVisual = mainVisualGO.transform;
-                mainVisual.SetParent(visual);
-                mainVisual.localPosition = Vector3.zero;
+                spriteRenderer = downMostTransform.gameObject.AddComponent<SpriteRenderer>();
             }
 
-            Undo.CollapseUndoOperations(group);
-
-            Debug.Log($"EntityVisual of {_entity.name} created hierarchy:\n{_entity.name}\n└── {visual.name}\n    └── {mainVisual.name}", mainVisual);
+            if (!spriteRenderer.sprite)
+            {
+                spriteRenderer.sprite = AssetDatabase.LoadAssetAtPath<Sprite>(_defaultSpritePath);
+            }
+            
+            _visual.MainVisualRenderer = spriteRenderer;
+            EditorUtility.SetDirty(_entity.gameObject);
+            AssetDatabase.SaveAssets();
         }
     }
 }

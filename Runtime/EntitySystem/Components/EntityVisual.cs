@@ -1,155 +1,62 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace SpookyCore.EntitySystem
 {
     public class EntityVisual : EntityComponent
     {
-        #region Enums
-
-        [Serializable]
-        public enum RotationModes
-        {
-            TimeBased,
-            IncrementBased,
-        }
-
-        #endregion
-        
-        #region Action
-
-        private Action OnRotationFinished = delegate { };
-
-        #endregion
-
         #region Fields
 
-        public Transform VisualTransform;
-        public Vector2 Heading;
-        public bool IsRotating { get; private set; }
+        public Transform MainVisualTransform;
+        public SpriteRenderer MainVisualRenderer;
+        [SerializeField] protected bool _flipXBasedOnVelocity;
         
-        [SerializeField] private SpriteRenderer _renderer;
-        [SerializeField] private Transform _mainVisualTransform; //Used for mechanim, the _renderer is still used for some entities so it's still there, will be deleted soon
-        [SerializeField] private float _rotationDuration = 0.125f;
-        [SerializeField] private bool _offsetRotation = true;
-        [SerializeField] private float _offsetAngle = -90;
-        //[SerializeField] private float _rotationSpeed = 100f;
-
-        private Quaternion _startRotation;
-        private Quaternion _targetRotation;
-        private float _angleDifference;
-        private float _rotationTimer;
-        private float _rotationAnglePerSecond = 45;
-        private float _angleIncrement;
-        private RotationModes _currentRotationMode;
-
+        protected EntityMovement _movement;
+        protected bool _isFacingRight = true;
+        
         #endregion
 
         #region Life Cycle
 
+        public override void OnAwake()
+        {
+            _movement = Entity.Get<EntityMovement>();
+        }
+
         public override void OnStart()
         {
-            base.OnStart();
-            VisualTransform ??= _renderer ? _renderer.transform : _mainVisualTransform;
+            if (!MainVisualTransform)
+            {
+                Debug.LogError($"Main Visual Transform unassigned at {name}");
+            }
+
+            if (!MainVisualRenderer)
+            {
+                Debug.LogError($"Main Visual Renderer unassigned at {name}");
+            }
         }
-        
+
         public override void OnUpdate()
         {
-            UpdateHeading();
-            
-            if (!IsRotating) return;
-            
-            switch (_currentRotationMode)
+            if (_flipXBasedOnVelocity && _movement)
             {
-                case RotationModes.TimeBased:
-                    TimeBasedRotation();
-                    break;
-                case RotationModes.IncrementBased:
-                    IncrementalRotation();
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
+                HandleFlipX();
             }
         }
 
         #endregion
-
-        #region Public Methods
-
-        public void StopRotating()
-        {
-            IsRotating = false;
-        }
-
-        public void StartRotatingInSetTime(Vector3 direction, float rotationDuration = 0.125f, Action onRotationFinished = null)
-        {
-            _currentRotationMode = RotationModes.TimeBased;
-            var angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-            _targetRotation = Quaternion.Euler(new Vector3(0, 0, angle + (_offsetRotation ? _offsetAngle : 0)));
-
-            _startRotation = VisualTransform.rotation;
-            _rotationDuration = rotationDuration;
-            _rotationTimer = 0;
-            IsRotating = true;
-            OnRotationFinished = onRotationFinished;
-        }
         
-        public void StartRotatingIncrementally(Vector3 direction, Action onRotationFinished = null)
-        {
-            _currentRotationMode = RotationModes.IncrementBased;
-            var angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-            _targetRotation = Quaternion.Euler(new Vector3(0, 0, angle + _offsetAngle));
-
-            _startRotation = VisualTransform.rotation;
-            _angleDifference = Quaternion.Angle(_targetRotation, _startRotation);
-            _angleIncrement = 0;
-            IsRotating = true;
-            OnRotationFinished = onRotationFinished;
-        }
-
-        public void SetColor(Color color)
-        {
-            _renderer.color = color;
-        }
-
-        #endregion
-
         #region Private Methods
 
-        private void TimeBasedRotation()
+        protected virtual void HandleFlipX()
         {
-            _rotationTimer += Time.deltaTime;
-            var t = Mathf.Clamp01(_rotationTimer / _rotationDuration);
-
-            VisualTransform.rotation = Quaternion.Slerp(_startRotation, _targetRotation, t);
-
-            if (t >= 1)
+            if ((_isFacingRight && _movement.Velocity.x < 0) ||
+                (!_isFacingRight && _movement.Velocity.x > 0))
             {
-                VisualTransform.rotation = _targetRotation;
-                IsRotating = false;
-                OnRotationFinished?.Invoke();
+                _isFacingRight = !_isFacingRight;
+                var localScale = MainVisualTransform.localScale;
+                localScale.x = _isFacingRight ? 1 : -1;
+                MainVisualTransform.localScale = localScale;
             }
-        }
-        
-        private void IncrementalRotation()
-        {
-            _angleIncrement += _rotationAnglePerSecond * Time.deltaTime;
-            var t = Mathf.Clamp01(_angleIncrement / _angleDifference);
-            
-            VisualTransform.rotation = Quaternion.Slerp(_startRotation, _targetRotation, t);
-        
-            if (t >= 1)
-            {
-                VisualTransform.rotation = _targetRotation;
-                IsRotating = false;
-                OnRotationFinished?.Invoke();
-            }
-        }
-        
-        private void UpdateHeading()
-        {
-            var angle = VisualTransform.rotation.eulerAngles.z * Mathf.Deg2Rad;
-            Heading = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)).normalized;
         }
 
         #endregion

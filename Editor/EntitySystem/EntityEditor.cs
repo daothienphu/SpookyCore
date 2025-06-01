@@ -3,7 +3,6 @@ using UnityEditor;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
 using SpookyCore.EntitySystem;
 
 namespace SpookyCore.Editor.EntitySystem
@@ -28,7 +27,7 @@ namespace SpookyCore.Editor.EntitySystem
                     !t.IsAbstract &&
                     typeof(EntityComponent).IsAssignableFrom(t))
                 .ToList();
-
+            
             _entity.RefreshComponentsCache();
             RefreshAvailableComponentList();
         }
@@ -37,9 +36,18 @@ namespace SpookyCore.Editor.EntitySystem
         {
             DrawDefaultInspector();
 
+            if (_entity.ID == EntityID.MISSING_ID || _entity.ID.ToString().Contains("________"))
+            {
+                EditorGUILayout.HelpBox("Please assign an ID for this entity.", MessageType.Error);
+                if (GUILayout.Button("Open EntityID Editor"))
+                {
+                    EntityIDEditorWindow.ShowWindow();
+                }
+            }
+            
             EditorGUILayout.Space(10);
             EditorGUILayout.LabelField("Quick Add Entity Components", EditorStyles.boldLabel);
-
+            
             RefreshAvailableComponentList();
 
             if (_availableComponentTypes.Count == 0)
@@ -50,9 +58,15 @@ namespace SpookyCore.Editor.EntitySystem
 
             _selectedIndex = EditorGUILayout.Popup("Select Component", _selectedIndex, _typeDisplayNames);
 
+            if (_selectedIndex == 0)
+            {
+                EditorGUILayout.HelpBox("Please select a component to add.", MessageType.Info);
+                return;
+            }
+            
             if (GUILayout.Button("Add Component"))
             {
-                var selectedType = _availableComponentTypes[_selectedIndex];
+                var selectedType = _availableComponentTypes[_selectedIndex - 1];
                 
                 if (_entity.GetComponent(selectedType))
                 {
@@ -79,19 +93,21 @@ namespace SpookyCore.Editor.EntitySystem
                 .OrderBy(t => t.Name)
                 .ToList();
 
-            _typeDisplayNames = _availableComponentTypes
-                .Select(t => ObjectNames.NicifyVariableName(t.Name))
-                .ToArray();
+            var typeNames = _availableComponentTypes
+                .Select(t => ObjectNames.NicifyVariableName(t.Name)).ToList();
+            typeNames.Add("");
+            for (var i = typeNames.Count - 1; i > 0; --i)
+            {
+                typeNames[i] = typeNames[i - 1];
+            }
+            typeNames[0] = "None";
+            
+            _typeDisplayNames = typeNames.ToArray();
 
-            if (_selectedIndex >= _availableComponentTypes.Count)
+            if (_selectedIndex >= _typeDisplayNames.Length)
             {
                 _selectedIndex = 0;
             }
-        }
-
-        private static string NicifyTypeName(string camelCase)
-        {
-            return Regex.Replace(camelCase, "(\\B[A-Z])", " $1");
         }
     }
 }

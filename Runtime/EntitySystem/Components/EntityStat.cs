@@ -5,14 +5,37 @@ namespace SpookyCore.EntitySystem
 {
     public class EntityStat : EntityComponent
     {
-        [SerializeField] private EntityStatConfig _statConfig;
-        public EntityStatConfig Stats;
+        #region Fields
 
-        public T GetData<T>() where T : EntityStatConfig => Stats as T;
+        [SerializeField] private EntityStatConfig _statConfig;        
 
+        #endregion
+
+        #region Life Cycle
+        
         public override void OnAwake()
         {
-            Stats = Instantiate(_statConfig);
+            _statConfig = Instantiate(_statConfig);
         }
+
+        #endregion
+
+        #region Public Methods
+
+        public T GetStats<T>() where T : EntityStatConfig => _statConfig as T;
+
+        public bool TryGetStats<T>(out T stats) where T : EntityStatConfig
+        {
+            if (_statConfig is T t)
+            {
+                stats = t;
+                return true;
+            }
+            stats = null;
+            return false;
+        }
+
+        #endregion
+        
     }
 }

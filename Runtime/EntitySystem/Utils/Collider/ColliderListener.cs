@@ -6,21 +6,37 @@ namespace SpookyCore.EntitySystem.Utils
     [RequireComponent(typeof(Collider2D))]
     public class ColliderListener : MonoBehaviour
     {
-        public EntityCollider ParentCollider { get; set; }
+        public EntityCollider ParentEntityCollider;
 
         private void OnCollisionEnter2D(Collision2D collision)
         {
-            if (ParentCollider)
+            if (ParentEntityCollider)
             {
-                ParentCollider.RegisterCollisionEnter(collision);
+                ParentEntityCollider.RegisterCollisionEnter(collision);
             }
         }
 
         private void OnCollisionExit2D(Collision2D collision)
         {
-            if (ParentCollider)
+            if (ParentEntityCollider)
             {
-                ParentCollider.RegisterCollisionExit(collision);
+                ParentEntityCollider.RegisterCollisionExit(collision);
+            }
+        }
+        
+        private void OnTriggerEnter2D(Collider2D other)
+        {
+            if (ParentEntityCollider)
+            {
+                ParentEntityCollider.RegisterTriggerEnter(other);
+            }
+        }
+
+        private void OnTriggerExit2D(Collider2D other)
+        {
+            if (ParentEntityCollider)
+            {
+                ParentEntityCollider.RegisterTriggerExit(other);
             }
         }
     }

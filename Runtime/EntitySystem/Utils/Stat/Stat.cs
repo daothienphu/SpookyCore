@@ -4,16 +4,14 @@ using UnityEngine;
 
 namespace SpookyCore.EntitySystem.Utils.Stat
 {
-    [CreateAssetMenu(menuName = "SpookyCore/Components/Stat/StatEntry", fileName = "StatEntry")]
-    public class Stat : ScriptableObject
+    [Serializable]
+    public class Stat : ISerializationCallbackReceiver
     {
-        [SerializeField] private float _baseValue;
-        private float _currentValue;
+        public float Base;
+        //Hide this in the inspector of EntityStatConfig
+        [HideInInspector] public float Current;
         private readonly List<IStatModifier> _modifiers = new();
-
-        public float BaseValue => _baseValue;
-        public float CurrentValue => _currentValue;
-
+        
         public void AddModifier(IStatModifier modifier)
         {
             _modifiers.Add(modifier);
@@ -28,11 +26,18 @@ namespace SpookyCore.EntitySystem.Utils.Stat
 
         protected virtual void Recalculate()
         {
-            _currentValue = _baseValue;
+            Current = Base;
             foreach (var mod in _modifiers)
             {
-                mod.Apply(ref _currentValue);
+                mod.Apply(ref Current);
             }
+        }
+
+        public void OnBeforeSerialize() { }
+
+        public void OnAfterDeserialize()
+        {
+            Current = Base;
         }
     }
 }

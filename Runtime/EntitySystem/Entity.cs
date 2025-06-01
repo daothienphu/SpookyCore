@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using SpookyCore.BehaviourTree;
 using SpookyCore.SystemLoader;
 using SpookyCore.Utilities;
+using SpookyCore.Utilities.Editor.Attributes;
 using UnityEngine;
 
 namespace SpookyCore.EntitySystem
@@ -30,7 +31,9 @@ namespace SpookyCore.EntitySystem
         #region Fields
 
         [field: SerializeField] public EntityID ID { get; private set; }
+        [ReadOnly]
         [field: SerializeField] public EntityState State { get; private set; }
+        [Tooltip("Use Unity Awake and Start event calls, used when object is placed in the scene instead of spawned from a pool.")]
         [SerializeField] private bool _useUnityAwakeAndStart;
         [SerializeField] private List<EntityComponent> _componentsList = new();  
         
