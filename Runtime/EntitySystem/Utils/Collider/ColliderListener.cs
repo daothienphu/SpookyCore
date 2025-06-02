@@ -1,43 +1,32 @@
 ﻿using UnityEngine;
 
-namespace SpookyCore.EntitySystem.Utils
+namespace SpookyCore.Runtime.EntitySystem.Utils
 {
     [DisallowMultipleComponent]
     [RequireComponent(typeof(Collider2D))]
     public class ColliderListener : MonoBehaviour
     {
         public EntityCollider ParentEntityCollider;
+        public EntityEnemyDetector ParentEntityEnemyDetector;
 
         private void OnCollisionEnter2D(Collision2D collision)
         {
-            if (ParentEntityCollider)
-            {
-                ParentEntityCollider.RegisterCollisionEnter(collision);
-            }
+            ParentEntityCollider?.RegisterCollisionEnter(collision);
         }
 
         private void OnCollisionExit2D(Collision2D collision)
         {
-            if (ParentEntityCollider)
-            {
-                ParentEntityCollider.RegisterCollisionExit(collision);
-            }
+            ParentEntityCollider?.RegisterCollisionExit(collision);
         }
         
         private void OnTriggerEnter2D(Collider2D other)
         {
-            if (ParentEntityCollider)
-            {
-                ParentEntityCollider.RegisterTriggerEnter(other);
-            }
+            ParentEntityEnemyDetector?.RegisterTriggerEnter(other);
         }
 
         private void OnTriggerExit2D(Collider2D other)
         {
-            if (ParentEntityCollider)
-            {
-                ParentEntityCollider.RegisterTriggerExit(other);
-            }
+            ParentEntityEnemyDetector?.RegisterTriggerExit(other);
         }
     }
 }

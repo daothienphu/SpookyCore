@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace SpookyCore.EntitySystem.Utils.Stat
+namespace SpookyCore.Runtime.EntitySystem.Utils.Stat
 {
     [Serializable]
     public class Stat : ISerializationCallbackReceiver

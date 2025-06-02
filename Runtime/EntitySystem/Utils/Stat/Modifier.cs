@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SpookyCore.EntitySystem.Utils.Stat
+namespace SpookyCore.Runtime.EntitySystem.Utils.Stat
 {
     public readonly struct Modifier : IEquatable<Modifier>
     {

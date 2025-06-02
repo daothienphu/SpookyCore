@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace SpookyCore.BehaviourTree
+namespace SpookyCore.Runtime.AI.BehaviourTree
 {
     public class SubTreeNode : NodeBase
     {

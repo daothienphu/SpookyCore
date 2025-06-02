@@ -1,7 +1,7 @@
-﻿using SpookyCore.EntitySystem.Utils.Stat;
+﻿using SpookyCore.Runtime.EntitySystem.Utils.Stat;
 using UnityEngine;
 
-namespace SpookyCore.EntitySystem
+namespace SpookyCore.Runtime.EntitySystem
 {
     public class EntityStat : EntityComponent
     {
@@ -21,7 +21,7 @@ namespace SpookyCore.EntitySystem
         #endregion
 
         #region Public Methods
-
+        
         public T GetStats<T>() where T : EntityStatConfig => _statConfig as T;
 
         public bool TryGetStats<T>(out T stats) where T : EntityStatConfig

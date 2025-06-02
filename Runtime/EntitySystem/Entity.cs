@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using SpookyCore.BehaviourTree;
-using SpookyCore.SystemLoader;
-using SpookyCore.Utilities;
-using SpookyCore.Utilities.Editor.Attributes;
+using SpookyCore.Runtime.AI.BehaviourTree;
+using SpookyCore.Runtime.Systems;
+using SpookyCore.Runtime.Utilities;
 using UnityEngine;
 
-namespace SpookyCore.EntitySystem
+namespace SpookyCore.Runtime.EntitySystem
 {
-    public abstract class Entity : MonoBehaviour, IPoolable
+    public class Entity : MonoBehaviour, IPoolable
     {
         #region Events
 
@@ -252,15 +251,15 @@ namespace SpookyCore.EntitySystem
             }
         }
 
-        public virtual PlayerData SaveGameData()
-        {
-            return null;
-        }
-
-        public virtual void LoadGameData(PlayerData playerData)
-        {
-            
-        }
+        // public virtual PlayerData SaveGameData()
+        // {
+        //     return null;
+        // }
+        //
+        // public virtual void LoadGameData(PlayerData playerData)
+        // {
+        //     
+        // }
 
         #endregion
     }

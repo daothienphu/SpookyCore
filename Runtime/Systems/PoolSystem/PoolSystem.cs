@@ -1,23 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using SpookyCore.EntitySystem;
-using SpookyCore.SystemLoader.SubSystems.EntityDatabase;
-using SpookyCore.Utilities;
+using SpookyCore.Runtime.EntitySystem;
 using UnityEngine;
 
-namespace SpookyCore.SystemLoader
+namespace SpookyCore.Runtime.Systems
 {
     public class PoolSystem : MonoSingleton<PoolSystem>
     {
         [SerializeField] private PoolObjectsConfig _poolConfig;
         private Dictionary<EntityID, ObjectPool<Entity>> _pools = new();
-        
-        private EntityDatabase _entityDatabase;
 
         protected override void OnAwake()
         {
             base.OnAwake();
-            _entityDatabase = EntityDatabase.Instance;
             InitializePools();
         }
 
@@ -25,7 +20,7 @@ namespace SpookyCore.SystemLoader
         {
             foreach (var entry in _poolConfig.PoolEntries)
             {
-                if (_entityDatabase.Prefabs.TryGetPrefab(entry.ID, out var prefab))
+                if (GlobalAssetRegistry.Instance.TryGetPrefab(entry.ID, out var prefab))
                 {
                     CreatePool(entry.ID, prefab, entry.InitialSize);
                 }
@@ -34,6 +29,8 @@ namespace SpookyCore.SystemLoader
                     Debug.Log($"Cannot create pool for entity {entry.ID}");
                 }
             }
+
+            Debug.Log("<color=cyan>[Pool System]</color> ready.");
         }
 
         public void CreatePool(EntityID id, GameObject prefab, int size)
@@ -57,15 +54,15 @@ namespace SpookyCore.SystemLoader
         {
             if (!_pools.TryGetValue(id, out var pool))
             {
-                Debug.Log($"Pool for entity {id} does not exist, creating pool.");
-                if (_entityDatabase.Prefabs.TryGetPrefab(id, out var prefab))
+                Debug.Log($"<color=cyan>[Pool System]</color> Pool for {id} does not exist, creating pool.");
+                if (GlobalAssetRegistry.Instance.TryGetPrefab(id, out var prefab))
                 {
                     CreatePool(id, prefab, 10);
                     pool = _pools[id];
                 }
                 else
                 {
-                    Debug.Log($"Cannot create pool for entity {id}");
+                    Debug.Log($"<color=cyan>[Pool System]</color> Cannot create pool for entity {id}.");
                 }
             }
             
@@ -80,7 +77,7 @@ namespace SpookyCore.SystemLoader
             }
             else
             {
-                Debug.LogError($"No pools exist for EntityID {id}. Destroying object.");
+                Debug.LogError($"<color=cyan>[Pool System]</color> No pools exist for EntityID {id}. Destroying object.");
                 Destroy(obj.gameObject);
             }
         }

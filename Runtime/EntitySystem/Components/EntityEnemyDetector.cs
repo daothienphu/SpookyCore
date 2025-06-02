@@ -1,144 +1,109 @@
-﻿using SpookyCore.Utilities.Editor.Attributes;
-using SpookyCore.Utilities.Editor.Gizmos;
+﻿using System.Collections.Generic;
 using UnityEngine;
+using SpookyCore.Runtime.EntitySystem.Utils;
+using SpookyCore.Runtime.EntitySystem.Utils.Stat;
+using SpookyCore.Runtime.Utilities;
 
-namespace SpookyCore.EntitySystem
+namespace SpookyCore.Runtime.EntitySystem
 {
+    [RequireComponent(typeof(Rigidbody2D))]
     public class EntityEnemyDetector : EntityComponent
     {
         #region Fields
 
-        //[SerializeField] protected EnemyDetector _enemyDetector;
-        [SerializeField] protected float _viewDistance = 2;
-        [SerializeField] protected float _fovAngle = 45;
-        [SerializeField] protected float _refreshTargetThreshold = 0.25f;
-        
-        protected float _halfFOV;
-        protected float _refreshTargetTimer;
-        private EntityVisual _visual;
-        private Collider2D _collider;
+        [SerializeField] internal ColliderListener _colliderListener;
+        public Collider2D Collider2D;
+        [field: SerializeField] public bool IsEnabled { get; private set; } = true;
 
+        private readonly List<Entity> _detectedEnemies = new();
+
+        protected EntityStat _stat;
+        
         #endregion
 
         #region Properties
 
-        [ReadOnly] public bool HasDetectedEnemy;
-        [ReadOnly] public Entity EnemyTarget;
-        [ReadOnly] public float SqrDistanceToEnemy;
+        public bool HasDetectedEnemies => _detectedEnemies.Count > 0;
+        public Entity FirstDetectedEnemy => HasDetectedEnemies ? _detectedEnemies[0] : null;
+        public Entity ClosestDetectedEnemy => GetClosetEnemy();
+        public IReadOnlyList<Entity> DetectedEnemies => _detectedEnemies.AsReadOnly();
 
         #endregion
 
         #region Life Cycle
 
+        public override void OnAwake()
+        {
+            _stat = Entity.Get<EntityStat>();
+            ToggleDetector(true);
+            Collider2D = _colliderListener.GetComponent<Collider2D>();
+        }
+
         public override void OnStart()
         {
-            base.OnStart();
-            _visual = Entity.Get<EntityVisual>();
-            _halfFOV = _fovAngle / 2f;
-            //_collider = _enemyDetector.GetComponent<Collider2D>();
-            if (_collider is CircleCollider2D circleCollider2D)
+            ((CircleCollider2D)Collider2D).radius = _stat?.GetStats<EntityStatConfig>().VisionRange.Current ?? 1;
+        }
+
+        #endregion
+
+        #region Public Methods
+
+        public virtual void ToggleDetector(bool isEnabled)
+        {
+            IsEnabled = isEnabled;
+            _colliderListener.gameObject.SetActive(isEnabled);
+        }
+
+        public virtual void RegisterTriggerEnter(Collider2D other)
+        {
+            if (other.TryGetEntity(out var entity) &&
+                entity != Entity && 
+                entity.ID.IsEnemy() &&
+                !_detectedEnemies.Contains(entity))
             {
-                circleCollider2D.radius = 0;//Entity.Get<EntityData>().FinalStats.DetectionRange;
-                _viewDistance = circleCollider2D.radius;
+                _detectedEnemies.Add(entity);
             }
         }
 
-        public override void OnUpdate()
+        public virtual void RegisterTriggerExit(Collider2D other)
         {
-            // var culler = Entity.Get<EntityCuller>();
-            // if (culler && culler.HasJustChangedCullState)
-            // {
-            //     _enemyDetector.ToggleColliders(!culler.ShouldBeCulled);
-            // }
-            
-            _refreshTargetTimer += Time.deltaTime;
-            if (_refreshTargetTimer > _refreshTargetThreshold)
+            if (other.TryGetEntity(out var entity))
             {
-                _refreshTargetTimer = 0;
-                OnTargetTimerRefreshed();
+                _detectedEnemies.Remove(entity);
             }
+        }
+
+        public virtual void ClearDetections()
+        {
+            _detectedEnemies.Clear();
         }
 
         #endregion
 
         #region Private Methods
 
-        protected virtual void OnTargetTimerRefreshed()
+        protected virtual Entity GetClosetEnemy()
         {
-            GetTarget();
-        }
-        
-        private void GetTarget()
-        {
-            HasDetectedEnemy = true;
-            EnemyTarget = null;
-            if (SqrDistanceToEnemy == 0)
+            if (_detectedEnemies == null || _detectedEnemies.Count == 0)
             {
-                SqrDistanceToEnemy = float.MaxValue;
+                return null;
             }
             
-            // foreach (var t in _enemyDetector.FoundTargets)
-            // {
-            //     if (IsWithinFieldOfView(t.transform))
-            //     {
-            //         EnemyTarget = t;
-            //         SqrDistanceToEnemy = (t.transform.position - Entity.transform.position).sqrMagnitude;
-            //     }
-            // }
-
-            if (!EnemyTarget)
+            var minDistance = float.MaxValue;
+            Entity closestEnemy = null;
+            foreach (var entity in _detectedEnemies)
             {
-                HasDetectedEnemy = false;
-                SqrDistanceToEnemy = 0;
+                var distance = (entity.transform.position - transform.position).sqrMagnitude;
+                if (distance < minDistance)
+                {
+                    minDistance = distance;
+                    closestEnemy = entity;
+                }
             }
+
+            return closestEnemy;
         }
 
-        private bool IsWithinFieldOfView(Transform target)
-        {
-            var dirToTarget = (target.position - Entity.transform.position).normalized;
-            //var angle = Vector3.Angle(dirToTarget, _visual.Heading);
-            var angle = 0;
-            return angle <= _halfFOV;
-        }
-
-#if UNITY_EDITOR
-        private void OnDrawGizmos()
-        {
-            if (!GlobalGizmoController.GetGizmoState("Entities/Nearby Enemy Detector")) return;
-            
-            if (!Entity) return;
-            var originalColor = Gizmos.color;
-            
-            //Draw nearby targets
-            if (EnemyTarget)
-            {
-                Gizmos.color = Color.red;
-                Gizmos.DrawLine(Entity.transform.position, EnemyTarget.transform.position);
-            }
-            else
-            {
-                Gizmos.color = Color.blue;
-                // foreach (var t in _enemyDetector.FoundTargets)
-                // {
-                //     Gizmos.DrawLine(Entity.transform.position, t.transform.position);
-                // }
-            }
-            
-            //Draw FOV
-            Gizmos.color = Color.green;
-            //var leftBoundary = Quaternion.Euler(0, 0, -_halfFOV) * _visual.Heading * _viewDistance; 
-            //var rightBoundary = Quaternion.Euler(0, 0, _halfFOV) * _visual.Heading * _viewDistance;
-            var leftBoundary = Quaternion.Euler(Vector3.one) * Vector3.one;
-            var rightBoundary = Quaternion.Euler(Vector3.one) * Vector3.one;
-            Gizmos.DrawLine(Entity.transform.position, Entity.transform.position + leftBoundary); 
-            Gizmos.DrawLine(Entity.transform.position, Entity.transform.position + rightBoundary);
-            
-            Gizmos.color = Color.yellow;
-            Gizmos.DrawWireSphere(Entity.transform.position, _viewDistance);
-            
-            Gizmos.color = originalColor;
-        }
-#endif
         #endregion
     }
 }

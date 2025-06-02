@@ -1,19 +1,31 @@
 ﻿using System;
 using System.Collections.Generic;
-using SpookyCore.Utilities;
+using System.Threading.Tasks;
 using UnityEngine;
 
-namespace SpookyCore.SystemLoader
+namespace SpookyCore.Runtime.Systems
 {
-    public class ServiceLocator : PersistentMonoSingleton<ServiceLocator>, IGameSystem
+    public class ServiceLocator : PersistentMonoSingleton<ServiceLocator>, IBootstrapSystem
     {
+        #region Fields
+
         private static readonly Dictionary<Type, IService> _services = new();
 
-        private void Start()
+        #endregion
+
+        #region Life Cycle
+
+        public Task OnBootstrapAsync(BootstrapContext context)
         {
             Register<IEventBus>(new EventBus());
-            Debug.Log("<color=cyan>[Service Locator]</color> system ready.");
+            Debug.Log("<color=cyan>[Service Locator System]</color> ready.");
+            
+            return Task.CompletedTask;
         }
+
+        #endregion
+
+        #region Public Methods
 
         public void Register<T>(T service) where T : class, IService
         {
@@ -44,5 +56,7 @@ namespace SpookyCore.SystemLoader
         {
             _services.Clear();
         }
+
+        #endregion
     }
 }

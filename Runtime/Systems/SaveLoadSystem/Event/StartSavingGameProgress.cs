@@ -1,4 +1,4 @@
-﻿namespace SpookyCore.SystemLoader.Event
+﻿namespace SpookyCore.Runtime.Systems
 {
     public class StartSavingGameProgress : GameEventContext
     {

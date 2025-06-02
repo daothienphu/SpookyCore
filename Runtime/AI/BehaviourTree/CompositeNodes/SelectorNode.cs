@@ -1,5 +1,5 @@
 ﻿
-namespace SpookyCore.BehaviourTree
+namespace SpookyCore.Runtime.AI.BehaviourTree
 {
     public class SelectorNode : CompositeNodeBase
     {

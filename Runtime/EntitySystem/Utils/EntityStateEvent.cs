@@ -1,6 +1,6 @@
-﻿using SpookyCore.SystemLoader;
+﻿using SpookyCore.Runtime.Systems;
 
-namespace SpookyCore.EntitySystem
+namespace SpookyCore.Runtime.EntitySystem
 {
     public class EntityStateEvent : GameEventContext
     {

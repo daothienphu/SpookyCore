@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace SpookyCore.Utilities
+namespace SpookyCore.Runtime.Systems
 {
     public abstract class PersistentMonoSingleton<T> : MonoSingleton<T> where T: MonoBehaviour {
         protected override void OnAwake() {

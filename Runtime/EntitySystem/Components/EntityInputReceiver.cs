@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace SpookyCore.EntitySystem
+namespace SpookyCore.Runtime.EntitySystem
 {
     public class EntityInputReceiver : EntityComponent
     {

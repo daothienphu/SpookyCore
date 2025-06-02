@@ -1,6 +1,6 @@
-﻿using SpookyCore.EntitySystem;
+﻿using SpookyCore.Runtime.EntitySystem;
 
-namespace SpookyCore.BehaviourTree
+namespace SpookyCore.Runtime.AI.BehaviourTree
 {
     public class AIContext
     {

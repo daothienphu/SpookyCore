@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-namespace SpookyCore.UISystem
+namespace SpookyCore.Runtime.UI
 {
     [CreateAssetMenu(menuName = "SpookyCore/UI Configs/UI Layer Config", fileName = "UI_Layer_Config")]
     public class UIPrefabsConfig : ScriptableObject

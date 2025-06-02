@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace SpookyCore.UISystem
+namespace SpookyCore.Runtime.UI
 {
     public abstract class BaseViewPresenter<TModel> : MonoBehaviour, IViewPresenter where TModel: BaseModel
     {

@@ -1,5 +1,5 @@
-﻿using SpookyCore.EntitySystem;
-using SpookyCore.EntitySystem.Utils;
+﻿using SpookyCore.Runtime.EntitySystem;
+using SpookyCore.Runtime.EntitySystem.Utils;
 using UnityEditor;
 using UnityEngine;
 
@@ -55,6 +55,12 @@ namespace SpookyCore.Editor.EntitySystem
 
         protected override void AssignReferences(Transform downMostTransform)
         {
+            if (_collider._colliderListener &&
+                _collider._colliderListener.ParentEntityCollider == _collider)
+            {
+                return;
+            }
+            
             var c2D = downMostTransform.GetComponent<Collider2D>();
             if (!c2D)
             {

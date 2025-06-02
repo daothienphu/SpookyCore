@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using SpookyCore.Utilities;
+using SpookyCore.Runtime.Systems;
 using UnityEngine;
 
-namespace SpookyCore.UISystem
+namespace SpookyCore.Runtime.UI
 {
     public class UISystem : MonoSingleton<UISystem>
     {

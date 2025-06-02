@@ -1,11 +1,11 @@
 using System.Collections.Generic;
-using SpookyCore.Utilities;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Audio;
 
-namespace SpookyCore.SystemLoader
+namespace SpookyCore.Runtime.Systems
 {
-    public class AudioSystem: PersistentMonoSingleton<AudioSystem>, IGameSystem
+    public class AudioSystem: PersistentMonoSingleton<AudioSystem>, IBootstrapSystem
     {
         #region Fields
 
@@ -21,13 +21,13 @@ namespace SpookyCore.SystemLoader
 
         #region Life Cycle
 
-        protected override void OnStart()
+        public Task OnBootstrapAsync(BootstrapContext context)
         {
-            base.OnStart();
             InitSFXPool();
-            Debug.Log("<color=cyan>[Audio]</color> system ready.");
+            Debug.Log("<color=cyan>[Audio System]</color> ready.");
+            return Task.CompletedTask;
         }
-
+        
         #endregion
 
         #region Public Methods

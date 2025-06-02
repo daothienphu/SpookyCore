@@ -3,7 +3,7 @@ using UnityEditor;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using SpookyCore.EntitySystem;
+using SpookyCore.Runtime.EntitySystem;
 
 namespace SpookyCore.Editor.EntitySystem
 {

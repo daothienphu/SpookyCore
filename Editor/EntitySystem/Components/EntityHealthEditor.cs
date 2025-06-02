@@ -1,5 +1,5 @@
 ﻿using System.IO;
-using SpookyCore.EntitySystem;
+using SpookyCore.Runtime.EntitySystem;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
@@ -60,12 +60,15 @@ namespace SpookyCore.Editor.EntitySystem
         
         protected override void AssignReferences(Transform downMostTransform)
         {
-            var slider = downMostTransform.GetComponent<Slider>();
-            if (slider)
+            if (_health.HealthBar)
             {
-                _health.HealthBar = slider;
+                return;
             }
             
+            var slider = downMostTransform.GetComponent<Slider>();
+            if (!slider) return;
+            
+            _health.HealthBar = slider;
             EditorUtility.SetDirty(_entity.gameObject);
             AssetDatabase.SaveAssets();
         }

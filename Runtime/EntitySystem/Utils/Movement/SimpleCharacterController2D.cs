@@ -1,7 +1,7 @@
-﻿using SpookyCore.Utilities.Editor.Attributes;
+﻿using SpookyCore.Runtime.Utilities;
 using UnityEngine;
 
-namespace SpookyCore.EntitySystem
+namespace SpookyCore.Runtime.EntitySystem
 {
     public class SimpleCharacterController2D : MonoBehaviour
     {

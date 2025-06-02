@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace SpookyCore.SystemLoader
+namespace SpookyCore.Runtime.Systems
 {
     [CreateAssetMenu(menuName = "SpookyCore/System Configs/Audio System/Audio Library", fileName = "Audio_Library")]
     public class AudioLib : ScriptableObject

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using SpookyCore.EntitySystem;
+using SpookyCore.Runtime.EntitySystem;
 using UnityEngine;
 
-namespace SpookyCore.SystemLoader
+namespace SpookyCore.Runtime.Systems
 {
     [Serializable]
     public struct PoolEntry

@@ -1,4 +1,4 @@
-﻿namespace SpookyCore.BehaviourTree
+﻿namespace SpookyCore.Runtime.AI.BehaviourTree
 {
     public class RootNode : NodeBase
     {

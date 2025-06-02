@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System;
 
-namespace SpookyCore.EntitySystem
+namespace SpookyCore.Runtime.EntitySystem
 {
     [Serializable]
     public abstract class EntityComponent : MonoBehaviour

@@ -1,8 +1,9 @@
 ﻿using System.Reflection;
+using SpookyCore.Runtime.Utilities;
 using UnityEditor;
 using UnityEngine;
 
-namespace SpookyCore.Utilities.Editor.Attributes
+namespace SpookyCore.Editor.Utilities
 {
     [CustomEditor(typeof(MonoBehaviour), true)]
     public class CreateButtonEditor : UnityEditor.Editor

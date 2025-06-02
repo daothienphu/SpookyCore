@@ -1,4 +1,4 @@
-﻿using SpookyCore.EntitySystem;
+﻿using SpookyCore.Runtime.EntitySystem;
 using UnityEditor;
 using UnityEngine;
 
@@ -37,10 +37,10 @@ namespace SpookyCore.Editor.EntitySystem
 
                 var cc = downMostTransform.GetComponent<SimpleCharacterController2D>();
                 _movement.CharacterController = cc;
+                
+                EditorUtility.SetDirty(_entity.gameObject);
+                AssetDatabase.SaveAssets();
             }
-            
-            EditorUtility.SetDirty(_entity.gameObject);
-            AssetDatabase.SaveAssets();
         }
     }
 }

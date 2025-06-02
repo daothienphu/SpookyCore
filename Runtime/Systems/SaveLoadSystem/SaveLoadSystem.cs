@@ -1,21 +1,36 @@
 ﻿using System;
 using System.IO;
 using System.Text;
-using SpookyCore.Utilities;
+using System.Threading.Tasks;
 using UnityEngine;
 
-namespace SpookyCore.SystemLoader
+namespace SpookyCore.Runtime.Systems
 {
-    public class SaveLoadSystem : PersistentMonoSingleton<SaveLoadSystem>, IGameSystem
+    public class SaveLoadSystem : PersistentMonoSingleton<SaveLoadSystem>, IBootstrapSystem
     {
+        #region Fields
+
         private static string SAVE_FILE_PATH;
 
-        protected override void OnStart()
+        private TaskCompletionSource<bool> _initializationTCS = new();
+        private bool _initialized;
+        
+        #endregion
+
+        #region Life Cycle
+
+        public Task OnBootstrapAsync(BootstrapContext context)
         {
-            base.OnStart();
-            SAVE_FILE_PATH = $"{Application.persistentDataPath}/Abyssalis_save.json";
             Debug.Log("<color=cyan>[Save Load]</color> system ready.");
+            
+            SAVE_FILE_PATH = $"{Application.persistentDataPath}/Abyssalis_save.json";
+            
+            _initializationTCS.TrySetResult(true);
+            
+            return _initializationTCS.Task;
         }
+
+        #endregion
 
         public static void Save<T>(T data)
         {

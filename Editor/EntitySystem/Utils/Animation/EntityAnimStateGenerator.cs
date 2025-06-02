@@ -3,7 +3,7 @@ using System.IO;
 using System.Text;
 using UnityEditor;
 using UnityEngine;
-using SpookyCore.EntitySystem;
+using SpookyCore.Runtime.EntitySystem;
 
 namespace SpookyCore.Editor.EntitySystem
 {
@@ -22,8 +22,8 @@ namespace SpookyCore.Editor.EntitySystem
                 foreach (var clip in config.AnimationClips)
                 {
                     if (!clip) continue;
-
-                    var stateName = clip.name.ToAnimationState(config.ID).ToString();
+                    
+                    var stateName = $"{config.ID.ToString()}_{clip.name}";
                     enumEntries.Add(stateName);
                 }
             }
@@ -37,7 +37,9 @@ namespace SpookyCore.Editor.EntitySystem
             sb.AppendLine("    {");
 
             foreach (var entry in enumEntries)
+            {
                 sb.AppendLine($"        {entry},");
+            }
 
             sb.AppendLine("    }");
             sb.AppendLine("}");
@@ -50,7 +52,7 @@ namespace SpookyCore.Editor.EntitySystem
 
             File.WriteAllText(OutputPath, sb.ToString());
             AssetDatabase.Refresh();
-            Debug.Log($"EntityAnimState generated at: {OutputPath}");
+            Debug.Log($"<color=cyan>EntityAnimState</color> generated at: <color=cyan>{OutputPath}</color>");
         }
 
         private static List<EntityAnimationConfig> LoadAllConfigs()
@@ -61,6 +63,7 @@ namespace SpookyCore.Editor.EntitySystem
             foreach (var guid in guids)
             {
                 var path = AssetDatabase.GUIDToAssetPath(guid);
+                Debug.Log($"found: {path}");
                 var asset = AssetDatabase.LoadAssetAtPath<EntityAnimationConfig>(path);
                 if (asset)
                 {

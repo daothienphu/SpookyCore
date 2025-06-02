@@ -1,8 +1,8 @@
 ﻿using UnityEditor;
 using UnityEngine;
 using System.Reflection;
-using SpookyCore.EntitySystem;
-using SpookyCore.EntitySystem.Utils.Stat;
+using SpookyCore.Runtime.EntitySystem;
+using SpookyCore.Runtime.EntitySystem.Utils.Stat;
 
 namespace SpookyCore.Editor.EntitySystem
 {

@@ -1,8 +1,8 @@
-﻿using SpookyCore.EntitySystem.Utils.Stat;
+﻿using SpookyCore.Runtime.EntitySystem.Utils.Stat;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace SpookyCore.EntitySystem
+namespace SpookyCore.Runtime.EntitySystem
 {
     [RequireComponent(typeof(EntityStat))]
     public class EntityHealth : EntityComponent

@@ -1,5 +1,5 @@
 ﻿using System.IO;
-using SpookyCore.EntitySystem;
+using SpookyCore.Runtime.EntitySystem;
 using UnityEditor;
 using UnityEngine;
 
@@ -39,6 +39,11 @@ namespace SpookyCore.Editor.EntitySystem
 
         protected override void AssignReferences(Transform downMostTransform)
         {
+            if (_visual.MainVisualTransform && _visual.MainVisualRenderer)
+            {
+                return;
+            }
+            
             _visual.MainVisualTransform = downMostTransform;
             
             var spriteRenderer = downMostTransform.GetComponent<SpriteRenderer>();

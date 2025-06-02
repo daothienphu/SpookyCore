@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace SpookyCore.EntitySystem
+namespace SpookyCore.Runtime.EntitySystem
 {
     [RequireComponent(typeof(Animator), typeof(EntityVisual))]
     public class EntityAnimation : EntityComponent

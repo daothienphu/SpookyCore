@@ -1,7 +1,8 @@
-﻿using UnityEngine;
+﻿using SpookyCore.Runtime.Utilities;
+using UnityEngine;
 using UnityEditor;
 
-namespace SpookyCore.Utilities.Editor.Attributes
+namespace SpookyCore.Editor.Utilities
 {
     [CustomPropertyDrawer(typeof(SortingLayerDropdownAttribute), true)]
     public class SortingLayerDropdownDrawer : PropertyDrawer

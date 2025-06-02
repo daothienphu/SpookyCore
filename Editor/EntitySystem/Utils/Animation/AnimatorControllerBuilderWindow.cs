@@ -1,5 +1,6 @@
 ﻿using System.IO;
-using SpookyCore.EntitySystem;
+using SpookyCore.Runtime.EntitySystem;
+using SpookyCore.Runtime.Utilities;
 using UnityEditor;
 using UnityEditor.Animations;
 using UnityEngine;
@@ -86,7 +87,7 @@ namespace SpookyCore.Editor.EntitySystem
             }
 
             AssetDatabase.SaveAssets();
-            Debug.Log("Animator Controller created at: " + controllerPath);
+            Debug.Log("Animator Controller".Color("cyan") + " created at: " + controllerPath.Color("cyan"));
 
             if (_targetEntityAnimation)
             {

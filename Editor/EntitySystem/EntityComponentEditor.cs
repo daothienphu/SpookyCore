@@ -1,5 +1,5 @@
 ﻿using System;
-using SpookyCore.EntitySystem;
+using SpookyCore.Runtime.EntitySystem;
 using UnityEditor;
 using UnityEngine;
 

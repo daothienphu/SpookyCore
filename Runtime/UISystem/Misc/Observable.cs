@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SpookyCore.UISystem
+namespace SpookyCore.Runtime.UI
 {
     public class Observable<T>
     {

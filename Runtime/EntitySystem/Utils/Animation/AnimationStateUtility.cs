@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using UnityEngine;
 
-namespace SpookyCore.EntitySystem
+namespace SpookyCore.Runtime.EntitySystem
 {
     public static class AnimationStateUtility
     {
         private static readonly Dictionary<EntityAnimState, string> StateToString = new();
-        private static Dictionary<(string, EntityID), EntityAnimState> _stringToState = new();
+        private static readonly Dictionary<(string, EntityID), EntityAnimState> StringToState = new();
             
         /// <summary>
         /// Converts an AnimationState to a string, format: Entity_State -> "State"
@@ -44,14 +45,14 @@ namespace SpookyCore.EntitySystem
         /// <returns></returns>
         public static EntityAnimState ToAnimationState(this string stringState, EntityID id)
         {
-            if (_stringToState.TryGetValue((stringState, id), out var result))
+            if (StringToState.TryGetValue((stringState, id), out var result))
             {
                 return result;
             }
             
             Enum.TryParse($"{id.ToString()}_{stringState}", out result);
             
-            _stringToState.Add((stringState, id), result);
+            StringToState.Add((stringState, id), result);
             
             return result;
         }

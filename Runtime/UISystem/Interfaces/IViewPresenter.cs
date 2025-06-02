@@ -1,4 +1,4 @@
-﻿namespace SpookyCore.UISystem
+﻿namespace SpookyCore.Runtime.UI
 {
     public interface IViewPresenter
     {

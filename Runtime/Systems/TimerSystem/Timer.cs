@@ -1,80 +1,67 @@
 ﻿using System;
-using UnityEngine;
 
-namespace SpookyCore.Utilities
+namespace SpookyCore.Runtime.Systems
 {
     public abstract class Timer : IDisposable
     {
-        public Action OnTimerStart = delegate { };
-        public Action OnTimerStop = delegate { };
-        
-        public float CurrentTime { get; protected set; }
-        public bool IsRunning { get; private set; }
-        public float Progress => Mathf.Clamp(CurrentTime / _initialTime, 0, 1);
-        
-        protected float _initialTime;
-        private bool _disposed;
+        public event Action OnTimerStart;
+        public event Action OnTimerStop;
+        public event Action OnTimerFinish;
 
-        protected Timer(float value)
+        public float CurrentTime { get; protected set; }
+        public float Duration { get; protected set; }
+        public bool IsRunning { get; private set; }
+        public bool IsFinished { get; protected set; }
+
+        protected bool _disposed;
+
+        protected Timer(float duration)
         {
-            _initialTime = value;
+            Duration = duration;
+            CurrentTime = duration;
         }
 
         public void Start()
         {
-            CurrentTime = _initialTime;
-            if (!IsRunning)
-            {
-                IsRunning = true;
-                TimerSystem.Instance.RegisterTimer(this);
-                OnTimerStart.Invoke();
-            }
+            if (IsRunning) return;
+            IsFinished = false;
+            IsRunning = true;
+            TimerSystem.Instance.RegisterTimer(this);
+            OnTimerStart?.Invoke();
         }
 
         public void Stop()
         {
-            if (IsRunning)
-            {
-                IsRunning = false;
-                TimerSystem.Instance.UnregisterTimer(this);
-                OnTimerStop.Invoke();
-            }
+            if (!IsRunning) return;
+            IsRunning = false;
+            TimerSystem.Instance.UnregisterTimer(this);
+            OnTimerStop?.Invoke();
         }
 
-        public abstract void Tick();
-        public abstract bool IsFinished { get; }
-
-        public void Resume() => IsRunning = true;
         public void Pause() => IsRunning = false;
+        public void Resume() => IsRunning = true;
 
-        public virtual void Reset() => CurrentTime = _initialTime;
+        public void Reset() => CurrentTime = Duration;
 
-        public virtual void Reset(float newTime)
+        public void SetDuration(float newDuration)
         {
-            _initialTime = newTime;
+            Duration = newDuration;
             Reset();
         }
 
-        ~Timer()
+        public abstract void Tick(float deltaTime);
+
+        public void MarkFinished()
         {
-            Dispose(false);
+            IsFinished = true;
+            Stop();
+            OnTimerFinish?.Invoke();
         }
 
         public void Dispose()
         {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        private void Dispose(bool disposing)
-        {
             if (_disposed) return;
-
-            if (disposing)
-            {
-                TimerSystem.Instance.UnregisterTimer(this);
-            }
-
+            Stop();
             _disposed = true;
         }
     }

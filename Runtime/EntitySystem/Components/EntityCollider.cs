@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
-using SpookyCore.EntitySystem.Utils;
-using SpookyCore.Utilities;
+using SpookyCore.Runtime.EntitySystem.Utils;
+using SpookyCore.Runtime.Utilities;
 using UnityEngine;
 
-namespace SpookyCore.EntitySystem
+namespace SpookyCore.Runtime.EntitySystem
 {
     [RequireComponent(typeof(Rigidbody2D))]
     public class EntityCollider : EntityComponent
@@ -33,29 +33,13 @@ namespace SpookyCore.EntitySystem
 
         #region Public Methods
 
-        public void ToggleCollider(bool isEnabled)
+        public virtual void ToggleCollider(bool isEnabled)
         {
             IsEnabled = isEnabled;
             _colliderListener.gameObject.SetActive(isEnabled);
         }
-
-        public void RegisterTriggerEnter(Collider2D collider)
-        {
-            if (collider.TryGetEntity(out var entity) && !_collidedEntities.Contains(entity))
-            {
-                _collidedEntities.Add(entity);
-            }
-        }
-
-        public void RegisterTriggerExit(Collider2D collider)
-        {
-            if (collider.TryGetEntity(out var entity))
-            {
-                _collidedEntities.Remove(entity);
-            }
-        }
         
-        public void RegisterCollisionEnter(Collision2D collision)
+        public virtual void RegisterCollisionEnter(Collision2D collision)
         {
             if (collision.TryGetEntity(out var entity) && !_collidedEntities.Contains(entity))
             {
@@ -63,7 +47,7 @@ namespace SpookyCore.EntitySystem
             }
         }
 
-        public void RegisterCollisionExit(Collision2D collision)
+        public virtual void RegisterCollisionExit(Collision2D collision)
         {
             if (collision.TryGetEntity(out var entity))
             {
@@ -71,7 +55,7 @@ namespace SpookyCore.EntitySystem
             }
         }
 
-        public void ClearCollisions()
+        public virtual void ClearCollisions()
         {
             _collidedEntities.Clear();
         }

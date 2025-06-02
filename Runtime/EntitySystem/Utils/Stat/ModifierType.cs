@@ -1,4 +1,4 @@
-﻿namespace SpookyCore.EntitySystem.Utils.Stat
+﻿namespace SpookyCore.Runtime.EntitySystem.Utils.Stat
 {
     public enum ModifierType
     {

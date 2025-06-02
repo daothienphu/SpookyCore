@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SpookyCore.SystemLoader
+namespace SpookyCore.Runtime.Systems
 {
     public interface IEventBus : IService
     {
