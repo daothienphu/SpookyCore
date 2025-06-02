@@ -1,4 +1,4 @@
 *.meta
 
-_OldVersion
-Runtime/System/_OldVersion
+_OldVersion/
+Runtime/System/_OldVersion/
