@@ -7,12 +7,12 @@ namespace SpookyCore.Utilities.Editor
 {
     public class GameObjectFinderWindow : EditorWindow
     {
-        private string _selectedTag = "Untagged"; // Default tag
-        private LayerMask _selectedLayer; // Default layer (Default layer is 0)
+        private string _selectedTag = "Untagged";
+        private LayerMask _selectedLayer;
         private readonly List<GameObject> _foundObjects = new();
         private Vector2 _scrollPosition;
-        private bool _layerOnly;
-        private bool _tagOnly;
+        private bool _findLayer;
+        private bool _findTag;
         
         [MenuItem("SpookyTools/Utilities/GameObject Finder")]
         public static void ShowWindow()
@@ -22,22 +22,29 @@ namespace SpookyCore.Utilities.Editor
 
         private void OnGUI()
         {
+            EditorGUILayout.Space(10);
             GUILayout.Label("Find GameObjects by Layer or Tag", EditorStyles.boldLabel);
-            
-            _selectedLayer = EditorGUILayout.LayerField("Select Layer", _selectedLayer);
-            _selectedTag = EditorGUILayout.TagField("Select Tag", _selectedTag);
-            _layerOnly = EditorGUILayout.Toggle("Layer Only", _layerOnly);
-            _tagOnly = EditorGUILayout.Toggle("Tag Only", _tagOnly);
 
+            _findLayer = EditorGUILayout.Toggle("Search With Layer", _findLayer);
+            _findTag = EditorGUILayout.Toggle("Search With Tag", _findTag);
+
+            _selectedLayer = _findLayer 
+                ? EditorGUILayout.LayerField("Select Layer", _selectedLayer) 
+                : 0;
+
+            _selectedTag = _findTag 
+                ? EditorGUILayout.TagField("Select Tag", _selectedTag) 
+                : "Untagged";
+            
+            EditorGUILayout.Space(20);
             if (GUILayout.Button("Find GameObjects"))
             {
                 FindGameObjects();
             }
-
-            GUILayout.Space(10);
+            EditorGUILayout.Space(10);
             GUILayout.Label($"Found {_foundObjects.Count} GameObjects", EditorStyles.boldLabel);
             
-            _scrollPosition = GUILayout.BeginScrollView(_scrollPosition, GUILayout.Height(200));
+            _scrollPosition = GUILayout.BeginScrollView(_scrollPosition, GUILayout.Height(400));
             foreach (var obj in _foundObjects)
             {
                 if (GUILayout.Button($"{obj.name}"))
@@ -56,9 +63,20 @@ namespace SpookyCore.Utilities.Editor
 
             foreach (var obj in allObjects)
             {
-                if ((_tagOnly && obj.CompareTag(_selectedTag)) || 
-                    (_layerOnly && obj.layer == _selectedLayer))// ||
-                    //(obj.IsInLayer(_selectedLayer) || obj.CompareTag(_selectedTag)))
+                var hasCorrectTag = obj.CompareTag(_selectedTag);
+                var hasCorrectLayer = obj.layer == _selectedLayer;
+
+                if (_findTag && _findLayer)
+                {
+                    if (hasCorrectTag && hasCorrectLayer)
+                    {
+                        _foundObjects.Add(obj);
+                    }
+                    continue;
+                }
+                
+                if ((_findTag && hasCorrectTag) || 
+                    (_findLayer && hasCorrectLayer))
                 {
                     _foundObjects.Add(obj);
                 }

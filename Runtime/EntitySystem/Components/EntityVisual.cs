@@ -10,8 +10,9 @@ namespace SpookyCore.EntitySystem
         public SpriteRenderer MainVisualRenderer;
         [SerializeField] protected bool _flipXBasedOnVelocity;
         
+        public bool IsFacingRight = true;
+        
         protected EntityMovement _movement;
-        protected bool _isFacingRight = true;
         
         #endregion
 
@@ -49,12 +50,12 @@ namespace SpookyCore.EntitySystem
 
         protected virtual void HandleFlipX()
         {
-            if ((_isFacingRight && _movement.Velocity.x < 0) ||
-                (!_isFacingRight && _movement.Velocity.x > 0))
+            if ((IsFacingRight && _movement.Velocity.x < 0) ||
+                (!IsFacingRight && _movement.Velocity.x > 0))
             {
-                _isFacingRight = !_isFacingRight;
+                IsFacingRight = !IsFacingRight;
                 var localScale = MainVisualTransform.localScale;
-                localScale.x = _isFacingRight ? 1 : -1;
+                localScale.x = IsFacingRight ? 1 : -1;
                 MainVisualTransform.localScale = localScale;
             }
         }

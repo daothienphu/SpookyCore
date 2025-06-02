@@ -2,16 +2,18 @@
 
 namespace SpookyCore.EntitySystem
 {
-    [RequireComponent(typeof(EntityMovement))]
     public class EntityInputReceiver : EntityComponent
     {
         [field: SerializeField] public Vector2 MoveInput { get; private set; }
         [field: SerializeField] public bool JumpPressed { get; private set; }
+        [field: SerializeField] public bool JumpHeld { get; private set; }
         [field: SerializeField] public bool RunHeld { get; private set; }
+        [field: SerializeField] public bool DashPressed { get; private set; }
         
         [Header("Settings")]
         public bool _verticalMovementEnabled;
         public bool _canJump;
+        public bool _canDash;
         [SerializeField] protected bool _useNewInputSystem;
 
         #region Life Cycle
@@ -63,22 +65,26 @@ namespace SpookyCore.EntitySystem
             MoveInput = new Vector2(x, y).normalized;
 
             JumpPressed = Input.GetButtonDown("Jump");
+            JumpHeld = Input.GetButton("Jump"); //For variable jump height
             RunHeld = Input.GetKey(KeyCode.LeftShift);
+            DashPressed = Input.GetKeyDown(KeyCode.K);
         }
         
         protected virtual void OnMovementPressedHandler(Vector2 movement)
         {
             MoveInput = movement;
         }
-        
         protected virtual void OnRunPressedHandler(bool pressed)
         {
             RunHeld = pressed;
         }
-
         protected virtual void OnJumpPressedHandler(bool pressed)
         {
             JumpPressed = pressed;
+        }
+        protected virtual void OnDashPressedHandler(bool pressed)
+        {
+            DashPressed = pressed;
         }
 
         #endregion

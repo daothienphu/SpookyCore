@@ -7,18 +7,24 @@ namespace SpookyCore.EntitySystem
         #region Fields
 
         [field: SerializeField] public Vector2 Velocity { get; private set; }
-        [field: SerializeField] public bool CanMove { get; set; } = true;
+        
+        [field: SerializeField] public bool IsEnabled { get; set; } = true;
+        [SerializeField] protected bool IsManualMovement;
+        
+        [Header("Default General Settings")]
+        [SerializeField] protected bool _alsoSetAnimation;
+        [SerializeField] protected bool _usePlatformerMovementSet;
+        public SimpleCharacterController2D CharacterController;
 
+        [Header("Default Movement Settings")]
         [SerializeField] protected float _walkSpeed = 5f;
         [SerializeField] protected float _runMultiplier = 1.5f;
         [SerializeField] protected float _jumpForce = 7f;
         
-        [SerializeField] protected bool _manualMovement;
-        [SerializeField] private bool _setAnimation;
-        [SerializeField] private bool _usePlatformerMovement;
-
         protected EntityInputReceiver _input;
         protected EntityAnimation _animation;
+        protected EntityCollider _collider;
+        protected EntityVisual _visual;
 
         #endregion
 
@@ -28,15 +34,45 @@ namespace SpookyCore.EntitySystem
         {
             _input = Entity.Get<EntityInputReceiver>();
             _animation = Entity.Get<EntityAnimation>();
-            if (_input && _input.enabled) _manualMovement = true;
+            _collider = Entity.Get<EntityCollider>();
+                
+            if (_input && _input.enabled) IsManualMovement = true;
+        }
+
+        public override void OnStart()
+        {
+            if (_usePlatformerMovementSet)
+            {
+                CharacterController.Collider2D = _collider.Collider2D;
+            }
+        }
+
+        public override void OnUpdate()
+        {
+            if (!IsEnabled) return;
+
+            if (_usePlatformerMovementSet)
+            {
+                CharacterController.SetInputs(_input.MoveInput.x, _input.RunHeld);
+                CharacterController.RequestJump(_input.JumpHeld);
+                if (_input.DashPressed) CharacterController.RequestDash(_input.MoveInput.normalized);
+            }
         }
 
         public override void OnFixedUpdate()
         {
-            if (!CanMove) return;
+            if (!IsEnabled) return;
 
-            HandleMovement(Time.fixedDeltaTime);
-            if (_setAnimation)
+            if (_usePlatformerMovementSet)
+            {
+                HandlePlatformerMovement(Time.fixedDeltaTime);
+            }
+            else
+            {
+                HandleGeneralMovement(Time.fixedDeltaTime);
+            }
+            
+            if (_alsoSetAnimation)
             {
                 HandleAnimation();
             }
@@ -48,7 +84,7 @@ namespace SpookyCore.EntitySystem
 
         public virtual void ToggleMovement(bool canMove)
         {
-            CanMove = canMove;
+            IsEnabled = canMove;
         }
         
         /// <summary>
@@ -65,7 +101,7 @@ namespace SpookyCore.EntitySystem
 
         #region Private Methods
 
-        protected virtual void HandleMovement(float deltaTime)
+        protected virtual void HandleGeneralMovement(float deltaTime)
         {
             var movement = new Vector2(
                 _input.MoveInput.x,
@@ -87,6 +123,14 @@ namespace SpookyCore.EntitySystem
             transform.Translate(movement * deltaTime);
         }
 
+        protected virtual void HandlePlatformerMovement(float deltaTime)
+        {
+            CharacterController.Tick(deltaTime);
+            
+            Velocity = CharacterController.Velocity;
+            transform.Translate(Velocity * deltaTime);
+        }
+
         protected virtual void HandleAnimation()
         {
             if (!_animation)
@@ -95,8 +139,8 @@ namespace SpookyCore.EntitySystem
             }
 
             var state = "Idle";
-
-            if (Velocity.sqrMagnitude > 0.001f)
+            
+            if ((_alsoSetAnimation && Mathf.Abs(Velocity.x) > 0.001f) || (!_alsoSetAnimation && Velocity.sqrMagnitude > 0.001f))
             {
                 state = _input.RunHeld ? "Run" : "Walk";
             }

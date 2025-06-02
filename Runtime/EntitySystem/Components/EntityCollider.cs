@@ -11,7 +11,7 @@ namespace SpookyCore.EntitySystem
         #region Fields
 
         [SerializeField] internal ColliderListener _colliderListener;
-
+        public Collider2D Collider2D;
         [field: SerializeField] public bool IsEnabled { get; private set; } = true;
         public bool HasCollided => _collidedEntities.Count > 0;
         public Entity CollidedEntity => _collidedEntities.Count > 0 ? _collidedEntities[0] : null;
@@ -26,6 +26,7 @@ namespace SpookyCore.EntitySystem
         public override void OnAwake()
         {
             ToggleCollider(true);
+            Collider2D = _colliderListener.gameObject.GetComponent<Collider2D>();
         }
 
         #endregion
