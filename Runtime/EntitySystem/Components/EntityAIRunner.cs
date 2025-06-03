@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using SpookyCore.Runtime.AI.BehaviourTree;
+using SpookyCore.Runtime.AI;
 using UnityEngine;
 
 namespace SpookyCore.Runtime.EntitySystem

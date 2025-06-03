@@ -1,5 +1,4 @@
-﻿using SpookyCore.Runtime.EntitySystem.Utils.Stat;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 namespace SpookyCore.Runtime.EntitySystem

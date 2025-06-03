@@ -1,6 +1,4 @@
-﻿using SpookyCore.Runtime.Systems;
-
-namespace SpookyCore.Utilities
+﻿namespace SpookyCore.Runtime.Systems
 {
     public class CountDownTimer : Timer
     {

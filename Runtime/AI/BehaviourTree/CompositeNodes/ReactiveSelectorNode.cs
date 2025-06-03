@@ -1,4 +1,4 @@
-﻿namespace SpookyCore.Runtime.AI.BehaviourTree
+﻿namespace SpookyCore.Runtime.AI
 {
     public class ReactiveSelectorNode : CompositeNodeBase
     {

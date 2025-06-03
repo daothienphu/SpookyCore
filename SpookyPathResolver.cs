@@ -7,7 +7,7 @@ namespace SpookyCore
     {
         private const string SpookyAsmdefName = "SpookyCore.asmdef";
         private static string _cachedPath;
-
+        
         public static string GetSpookyCorePath()
         {
             if (!string.IsNullOrEmpty(_cachedPath)) return _cachedPath;

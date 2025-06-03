@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 
-namespace SpookyCore.Runtime.EntitySystem.Utils.Stat
+namespace SpookyCore.Runtime.EntitySystem
 {
-    [CreateAssetMenu(menuName = "SpookyCore/Components/Stat/Entity Stat Config", fileName = "EntityStat_Config")]
+    [CreateAssetMenu(menuName = "SpookyCore/Entity System/Stat/Entity Stat Config", fileName = "Entity_StatConfig")]
     public class EntityStatConfig : ScriptableObject
     {
         [field: SerializeField] public Stat Health { get; private set; }

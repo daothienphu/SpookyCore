@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace SpookyCore.Runtime.EntitySystem.Utils
+namespace SpookyCore.Runtime.EntitySystem
 {
     [DisallowMultipleComponent]
     [RequireComponent(typeof(Collider2D))]

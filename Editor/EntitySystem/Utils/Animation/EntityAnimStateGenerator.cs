@@ -11,7 +11,7 @@ namespace SpookyCore.Editor.EntitySystem
     {
         private static readonly string OutputPath = Path.Combine(SpookyPathResolver.GetSpookyCorePath(), "Runtime/EntitySystem/Utils/Animation/EntityAnimState.cs");
         
-        [MenuItem("SpookyTools/Entity System/Generate Animation States Enum")]
+        [MenuItem("SpookyTools/Entity System/Animation/Generate Animation States Enum")]
         public static void GenerateEnum()
         {
             var configs = LoadAllConfigs();

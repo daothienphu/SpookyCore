@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace SpookyCore.Runtime.EntitySystem.Utils.EntityID
+namespace SpookyCore.Runtime.EntitySystem
 {
-    [CreateAssetMenu(fileName = "EntityIDDatabase", menuName = "SpookyCore/EntitySystem/Entity ID Database")]
+    [CreateAssetMenu(menuName = "SpookyCore/Entity System/Entity ID Database", fileName = "EntityIDDatabase")]
     internal sealed class EntityIDDatabase : ScriptableObject
     {
         [Serializable]

@@ -1,10 +1,10 @@
 ﻿using UnityEngine;
 
-namespace SpookyCore.Runtime.EntitySystem.Attack
+namespace SpookyCore.Runtime.EntitySystem
 {
     public enum AttackType { Melee, Ranged }
 
-    [CreateAssetMenu(menuName = "SpookyCore/Entity/AttackConfig")]
+    [CreateAssetMenu(menuName = "SpookyCore/Entity System/Attack/Attack Config", fileName = "Attack Config")]
     public class EntityAttackConfig : ScriptableObject
     {
         public AttackType Type;

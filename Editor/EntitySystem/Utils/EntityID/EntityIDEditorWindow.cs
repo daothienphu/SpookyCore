@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using SpookyCore.Runtime.EntitySystem.Utils.EntityID;
+using SpookyCore.Runtime.EntitySystem;
 using UnityEditor;
 using UnityEngine;
 
@@ -10,8 +10,8 @@ namespace SpookyCore.Editor.EntitySystem
     {
         #region Fields
 
-        private static string DBPath = Path.Combine(SpookyPathResolver.GetSpookyCorePath(), "Runtime/EntitySystem/Utils/EntityID/EntityIDDatabase.asset");
-        private static string OutputPath = Path.Combine(SpookyPathResolver.GetSpookyCorePath(), "Runtime/EntitySystem/EntityID.cs");
+        private static string DBPath = "";
+        private static string OutputPath = "";
 
         private EntityIDDatabase _database;
         private Vector2 _scroll;
@@ -44,8 +44,18 @@ namespace SpookyCore.Editor.EntitySystem
 
         private void OnEnable()
         {
-            _database = AssetDatabase.LoadAssetAtPath<EntityIDDatabase>(DBPath);
+            if (DBPath == "")
+            {
+                DBPath = Path.Combine(SpookyPathResolver.GetSpookyCorePath(), "Runtime/EntitySystem/Utils/EntityID/EntityIDDatabase.asset");
+            }
 
+            if (OutputPath == "")
+            {
+                OutputPath = Path.Combine(SpookyPathResolver.GetSpookyCorePath(), "Runtime/EntitySystem/EntityID.cs");
+            }
+            
+            _database = AssetDatabase.LoadAssetAtPath<EntityIDDatabase>(DBPath);
+            
             if (!_database)
             {
                 _database = CreateInstance<EntityIDDatabase>();
@@ -349,7 +359,7 @@ namespace SpookyCore.Editor.EntitySystem
             writer.WriteLine("//DO NOT change manually.");
             writer.WriteLine("using System;");
             writer.WriteLine();
-            writer.WriteLine("namespace SpookyCore.EntitySystem");
+            writer.WriteLine("namespace SpookyCore.Runtime.EntitySystem");
             writer.WriteLine("{");
             writer.WriteLine("    [Serializable]");
             writer.WriteLine("    public enum EntityID");

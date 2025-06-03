@@ -25,7 +25,7 @@ namespace SpookyCore.Runtime.Systems
                         return found;
                     }
                     
-                    Debug.LogError($"[MonoSingleton<{typeof(T).Name}>] not found in scene!");
+                    Debug.LogWarning($"[<{typeof(T).Name}>] not found in scene!");
                     return null;
                 }
             }

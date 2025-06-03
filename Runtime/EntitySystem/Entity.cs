@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using SpookyCore.Runtime.AI.BehaviourTree;
+using SpookyCore.Runtime.AI;
 using SpookyCore.Runtime.Systems;
 using SpookyCore.Runtime.Utilities;
 using UnityEngine;

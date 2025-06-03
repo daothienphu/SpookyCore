@@ -1,7 +1,7 @@
 ﻿using SpookyCore.Runtime.Utilities;
 using UnityEngine;
 
-namespace SpookyCore.Runtime.EntitySystem.Attack
+namespace SpookyCore.Runtime.EntitySystem
 {
     public class Projectile : MonoBehaviour
     {

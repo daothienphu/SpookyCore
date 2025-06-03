@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace SpookyCore.Runtime.Systems
 {
-    [CreateAssetMenu(fileName = "SceneFlowConfig", menuName = "SpookyCore/Systems/Scene Flow System/Scene Flow Config")]
+    [CreateAssetMenu(menuName = "SpookyCore/Systems/Scene Flow System/Scene Flow Config", fileName = "SceneFlowConfig")]
     public class SceneFlowConfig : ScriptableObject
     {
         [Serializable]

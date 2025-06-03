@@ -28,7 +28,7 @@ namespace SpookyCore.Editor.EntitySystem
 
         #region Life Cycle
         
-        [MenuItem("SpookyTools/Entity System/Sprite Animation Clip Previewer")]
+        [MenuItem("SpookyTools/Entity System/Animation/Sprite Animation Clip Previewer")]
         public static void ShowMenuWindow()
         {
             ShowWindow();

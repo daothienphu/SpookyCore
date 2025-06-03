@@ -2,7 +2,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace SpookyCore.SystemLoader
+namespace SpookyCore.Editor.Systems
 {
     public class SaveLoadSystemEditor : EditorWindow
     {

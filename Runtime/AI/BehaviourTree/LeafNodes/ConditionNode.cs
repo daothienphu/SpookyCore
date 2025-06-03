@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SpookyCore.Runtime.AI.BehaviourTree
+namespace SpookyCore.Runtime.AI
 {
     public class ConditionNode : NodeBase
     {

@@ -2,7 +2,6 @@
 using UnityEngine;
 using System.Reflection;
 using SpookyCore.Runtime.EntitySystem;
-using SpookyCore.Runtime.EntitySystem.Utils.Stat;
 
 namespace SpookyCore.Editor.EntitySystem
 {

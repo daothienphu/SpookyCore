@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
-using SpookyCore.Runtime.EntitySystem.Utils;
-using SpookyCore.Runtime.EntitySystem.Utils.Stat;
 using SpookyCore.Runtime.Utilities;
 
 namespace SpookyCore.Runtime.EntitySystem

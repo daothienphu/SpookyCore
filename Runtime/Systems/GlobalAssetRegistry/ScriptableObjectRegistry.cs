@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace SpookyCore.Runtime.Systems
 {
-    [CreateAssetMenu(menuName = "SpookyCore/System/Global Asset Registry/Scriptable Object Registry", fileName = "ScriptableObjectRegistry")]
+    [CreateAssetMenu(menuName = "SpookyCore/Systems/Global Asset Registry/Scriptable Object Registry", fileName = "ScriptableObjectRegistry")]
     public class ScriptableObjectRegistry : ScriptableObject
     {
         [Serializable]

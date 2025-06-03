@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace SpookyCore.Runtime.Systems
 {
-    [CreateAssetMenu(menuName = "SpookyCore/System Configs/Audio System/Audio Library", fileName = "Audio_Library")]
+    [CreateAssetMenu(menuName = "SpookyCore/Systems/Audio System/Audio Library", fileName = "Audio_Library")]
     public class AudioLib : ScriptableObject
     {
         [Serializable]

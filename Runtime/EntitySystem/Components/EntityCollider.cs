@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using SpookyCore.Runtime.EntitySystem.Utils;
 using SpookyCore.Runtime.Utilities;
 using UnityEngine;
 
@@ -13,6 +12,9 @@ namespace SpookyCore.Runtime.EntitySystem
         [SerializeField] internal ColliderListener _colliderListener;
         public Collider2D Collider2D;
         [field: SerializeField] public bool IsEnabled { get; private set; } = true;
+
+        [SerializeField] internal bool _prepareRigidbody2D = true;
+        
         public bool HasCollided => _collidedEntities.Count > 0;
         public Entity CollidedEntity => _collidedEntities.Count > 0 ? _collidedEntities[0] : null;
         public IReadOnlyList<Entity> CollidedEntities => _collidedEntities.AsReadOnly();

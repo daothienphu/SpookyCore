@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace SpookyCore.Runtime.AI.BehaviourTree
+namespace SpookyCore.Runtime.AI
 {
     public abstract class AIBehavior : ScriptableObject
     {

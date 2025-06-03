@@ -2,7 +2,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace SpookyCore.Runtime.AI.BehaviourTree.Editor
+namespace SpookyCore.Editor.AI.BehaviourTree
 {
     [CustomEditor(typeof(EntityAIRunner))]
     public class EntityAIRunnerEditor : UnityEditor.Editor

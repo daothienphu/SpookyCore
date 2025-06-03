@@ -2,7 +2,7 @@
 using SpookyCore.Runtime.Utilities;
 using UnityEngine;
 
-namespace SpookyCore.Runtime.EntitySystem.Attack
+namespace SpookyCore.Runtime.EntitySystem
 {
     [RequireComponent(typeof(Entity))]
     public class EntityAttack : EntityComponent

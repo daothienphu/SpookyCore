@@ -12,11 +12,11 @@ namespace SpookyCore.Runtime.EntitySystem
         ___________________________________PLAYER = 100,
         Player = 101,
 
-        ___________________________________WALL = 200,
-        Wall = 201,
+        ___________________________________ENEMY = 200,
+        Enemy = 201,
 
-        ___________________________________ENEMY = 300,
-        BasicEnemy = 301,
+        ___________________________________PLATFORM = 300,
+        Platform = 301,
     }
 
     public static class EntityType
@@ -27,13 +27,13 @@ namespace SpookyCore.Runtime.EntitySystem
             return intValue is > 100 and < 200;
         }
 
-        public static bool IsWall(this EntityID entityID)
+        public static bool IsEnemy(this EntityID entityID)
         {
             var intValue = (int)entityID;
             return intValue is > 200 and < 300;
         }
 
-        public static bool IsEnemy(this EntityID entityID)
+        public static bool IsPlatform(this EntityID entityID)
         {
             var intValue = (int)entityID;
             return intValue is > 300 and < 400;

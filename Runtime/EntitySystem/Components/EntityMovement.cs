@@ -140,7 +140,7 @@ namespace SpookyCore.Runtime.EntitySystem
 
             var state = "Idle";
             
-            if ((_alsoSetAnimation && Mathf.Abs(Velocity.x) > 0.001f) || (!_alsoSetAnimation && Velocity.sqrMagnitude > 0.001f))
+            if ((_usePlatformerMovementSet && Mathf.Abs(Velocity.x) > 0.001f) || (!_usePlatformerMovementSet && Velocity.sqrMagnitude > 0.001f))
             {
                 state = _input.RunHeld ? "Run" : "Walk";
             }

@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace SpookyCore.Runtime.UI
 {
-    [CreateAssetMenu(menuName = "SpookyCore/UI Configs/UI Layer Config", fileName = "UI_Layer_Config")]
+    [CreateAssetMenu(menuName = "SpookyCore/Systems/UI System/UI Layer Config", fileName = "UI_Layer_Config")]
     public class UIPrefabsConfig : ScriptableObject
     {
         [field: SerializeField] public List<GameObject> HudLayer;

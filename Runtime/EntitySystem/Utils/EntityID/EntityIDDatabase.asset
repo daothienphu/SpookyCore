@@ -16,9 +16,9 @@ MonoBehaviour:
   - CategoryName: Player
     Entries:
     - Player
-  - CategoryName: Wall
-    Entries:
-    - Wall
   - CategoryName: Enemy
     Entries:
-    - BasicEnemy
+    - Enemy
+  - CategoryName: Platform
+    Entries:
+    - Platform

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace SpookyCore.Runtime.AI.BehaviourTree
+namespace SpookyCore.Runtime.AI
 {
     public class FluentTreeBuilder
     {

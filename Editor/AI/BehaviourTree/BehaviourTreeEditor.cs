@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
+using SpookyCore.Runtime.AI;
 using SpookyCore.Runtime.EntitySystem;
 using UnityEditor;
 using UnityEngine;
 
-namespace SpookyCore.Runtime.AI.BehaviourTree.Editor
+namespace SpookyCore.Editor.AI.BehaviourTree
 {
     public class BehaviourTreeEditor : EditorWindow
     {

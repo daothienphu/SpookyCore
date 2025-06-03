@@ -17,7 +17,7 @@ namespace SpookyCore.Editor.Systems
             GetWindow<GlobalGizmoEditorWindow>("Gizmo Controller");
         }
 
-        [MenuItem("SpookyTools/Utilities/Global Gizmo Controller/Clear Cached Values")]
+        [MenuItem("SpookyTools/Systems/Global Gizmo Controller/Clear Cached Values")]
         public static void ClearCachedValues()
         {
             EditorPrefs.SetString(GlobalGizmoController.EditorPrefsKey, "");
