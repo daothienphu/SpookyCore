@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 349baa986b7a4878a39b0eed4c6df0b8, type: 3}
+  m_Name: SystemPrefabsRegistry
+  m_EditorClassIdentifier: 
+  Prefabs:
+  - SystemTypeName: GameManager
+    Prefab: {fileID: 7017251962457415757, guid: eba60d96e3005b543bf2751534339592, type: 3}
+  - SystemTypeName: AudioSystem
+    Prefab: {fileID: 4473631416378118276, guid: e8375feb3ea485b48b6cd09150210009, type: 3}
+  - SystemTypeName: GlobalAssetRegistry
+    Prefab: {fileID: 7999275555278567446, guid: ed51175e7b475b849a5041739f254784, type: 3}
+  - SystemTypeName: SaveLoadSystem
+    Prefab: {fileID: 890190321165334744, guid: b0868c971a7362845a3c3c1282e73b16, type: 3}
+  - SystemTypeName: SceneFlowSystem
+    Prefab: {fileID: 141712453150204187, guid: 7bea5b85737bd864ba540622d3ead3f9, type: 3}

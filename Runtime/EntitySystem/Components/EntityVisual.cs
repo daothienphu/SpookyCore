@@ -7,6 +7,7 @@ namespace SpookyCore.Runtime.EntitySystem
         #region Fields
 
         public Transform MainVisualTransform;
+        [Tooltip("Useful for when your main visual only have 1 singular sprite.")]
         public SpriteRenderer MainVisualRenderer;
         [SerializeField] protected bool _flipXBasedOnVelocity;
         
@@ -21,6 +22,11 @@ namespace SpookyCore.Runtime.EntitySystem
         public override void OnAwake()
         {
             _movement = Entity.Get<EntityMovement>();
+            if (!_movement)
+            {
+                //todo: handle assignable types Get in Entity
+                _movement = Entity.Get<PlayerMovement>();
+            }
         }
 
         public override void OnStart()
@@ -28,11 +34,6 @@ namespace SpookyCore.Runtime.EntitySystem
             if (!MainVisualTransform)
             {
                 Debug.LogError($"Main Visual Transform unassigned at {name}");
-            }
-
-            if (!MainVisualRenderer)
-            {
-                Debug.LogError($"Main Visual Renderer unassigned at {name}");
             }
         }
 

@@ -35,7 +35,7 @@ namespace SpookyCore.Runtime.Systems
         public void PlayMusic(AudioLib.AudioID id)
         {
             var clip = AudioLib.GetClipByEnum(id);
-            if (clip != null)
+            if (clip)
             {
                 MusicSource.clip = clip;
                 MusicSource.Play();
@@ -45,7 +45,7 @@ namespace SpookyCore.Runtime.Systems
         public void PlayAmbient(AudioLib.AudioID id)
         {
             var clip = AudioLib.GetClipByEnum(id);
-            if (clip != null)
+            if (clip)
             {
                 AmbientSource.clip = clip;
                 AmbientSource.loop = true;
@@ -56,10 +56,10 @@ namespace SpookyCore.Runtime.Systems
         public void PlaySFX(AudioLib.AudioID id, float volume = 1f)
         {
             var clip = AudioLib.GetClipByEnum(id);
-            if (clip != null)
+            if (clip)
             {
                 var availableSource = _sfxSources.Find(s => !s.isPlaying);
-                if (availableSource != null)
+                if (availableSource)
                 {
                     availableSource.clip = clip;
                     availableSource.volume = volume;
@@ -71,10 +71,10 @@ namespace SpookyCore.Runtime.Systems
         public void PlaySFXWithPitch(AudioLib.AudioID id, float minPitch = 0.9f, float maxPitch = 1.1f)
         {
             var clip = AudioLib.GetClipByEnum(id);
-            if (clip != null)
+            if (clip)
             {
                 var availableSource = _sfxSources.Find(s => !s.isPlaying);
-                if (availableSource != null)
+                if (availableSource)
                 {
                     availableSource.clip = clip;
                     availableSource.pitch = Random.Range(minPitch, maxPitch);
@@ -110,6 +110,7 @@ namespace SpookyCore.Runtime.Systems
         
         private void InitSFXPool()
         {
+            if (!AudioMixer) return;
             for (var i = 0; i < SFXPoolSize; i++)
             {
                 var sfxObject = new GameObject("SFX_Source_" + i);

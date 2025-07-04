@@ -127,7 +127,7 @@ namespace SpookyCore.Runtime.UI
 
         #region Fields
 
-        [SerializeField] private UIPrefabsConfig _uiPrefabsConfig;
+        [SerializeField] private UIPrefabsConfig _uiLayersConfig;
         [SerializeField] private Transform _hudLayerParent;
         [SerializeField] private Transform _popupLayerParent;
         [SerializeField] private Transform _overlayLayerParent;
@@ -146,10 +146,10 @@ namespace SpookyCore.Runtime.UI
         {
             _cachedUI = new UICache();
             
-            CacheAllUIPrefabs(_uiPrefabsConfig.HudLayer, _hudLayerParent);
-            CacheAllUIPrefabs(_uiPrefabsConfig.PopupLayer, _popupLayerParent);
-            CacheAllUIPrefabs(_uiPrefabsConfig.OverlayLayer, _overlayLayerParent);
-            CacheAllUIPrefabs(_uiPrefabsConfig.WorldSpaceLayer, _worldSpaceLayerParent);
+            CacheAllUIPrefabs(_uiLayersConfig.HudLayer, _hudLayerParent);
+            CacheAllUIPrefabs(_uiLayersConfig.PopupLayer, _popupLayerParent);
+            CacheAllUIPrefabs(_uiLayersConfig.OverlayLayer, _overlayLayerParent);
+            CacheAllUIPrefabs(_uiLayersConfig.WorldSpaceLayer, _worldSpaceLayerParent);
 
             foreach (var hud in _cachedUI.GetHUDs())
             {

@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
-using UnityEngine;
 using SpookyCore.Runtime.Utilities;
+using UnityEngine;
 
 namespace SpookyCore.Runtime.EntitySystem
 {
     [RequireComponent(typeof(Rigidbody2D))]
-    public class EntityEnemyDetector : EntityComponent
+    public class EntityTrigger : EntityComponent
     {
         #region Fields
 
@@ -13,18 +13,19 @@ namespace SpookyCore.Runtime.EntitySystem
         public Collider2D Collider2D;
         [field: SerializeField] public bool IsEnabled { get; private set; } = true;
 
-        private readonly List<Entity> _detectedEnemies = new();
-
-        protected EntityStat _stat;
+        [SerializeField] internal bool _prepareRigidbody2D = true;
+        [SerializeField] private LayerMask _layerMask;
+        
+        protected readonly List<Entity> _detectedEntities = new();
         
         #endregion
 
         #region Properties
 
-        public bool HasDetectedEnemies => _detectedEnemies.Count > 0;
-        public Entity FirstDetectedEnemy => HasDetectedEnemies ? _detectedEnemies[0] : null;
-        public Entity ClosestDetectedEnemy => GetClosetEnemy();
-        public IReadOnlyList<Entity> DetectedEnemies => _detectedEnemies.AsReadOnly();
+        public bool HasTriggered => _detectedEntities.Count > 0;
+        public Entity FirstDetectedEntity => HasTriggered ? _detectedEntities[0] : null;
+        public Entity ClosestDetectedEnemy => GetClosestEntity();
+        public IReadOnlyList<Entity> DetectedEnemies => _detectedEntities.AsReadOnly();
 
         #endregion
 
@@ -32,14 +33,8 @@ namespace SpookyCore.Runtime.EntitySystem
 
         public override void OnAwake()
         {
-            _stat = Entity.Get<EntityStat>();
             ToggleDetector(true);
-            Collider2D = _colliderListener.GetComponent<Collider2D>();
-        }
-
-        public override void OnStart()
-        {
-            ((CircleCollider2D)Collider2D).radius = _stat?.GetStats<EntityStatConfig>().VisionRange.Current ?? 1;
+            Collider2D = _colliderListener.gameObject.GetComponent<Collider2D>();
         }
 
         #endregion
@@ -51,15 +46,15 @@ namespace SpookyCore.Runtime.EntitySystem
             IsEnabled = isEnabled;
             _colliderListener.gameObject.SetActive(isEnabled);
         }
-
+        
         public virtual void RegisterTriggerEnter(Collider2D other)
         {
             if (other.TryGetEntity(out var entity) &&
-                entity != Entity && 
-                entity.ID.IsEnemy() &&
-                !_detectedEnemies.Contains(entity))
+                entity != Entity &&
+                !_detectedEntities.Contains(entity))
             {
-                _detectedEnemies.Add(entity);
+                _detectedEntities.Add(entity);
+                OnEntityEntered(entity);
             }
         }
 
@@ -67,29 +62,40 @@ namespace SpookyCore.Runtime.EntitySystem
         {
             if (other.TryGetEntity(out var entity))
             {
-                _detectedEnemies.Remove(entity);
+                _detectedEntities.Remove(entity);
+                OnEntityExited(entity);
             }
         }
 
         public virtual void ClearDetections()
         {
-            _detectedEnemies.Clear();
+            _detectedEntities.Clear();
         }
 
         #endregion
 
         #region Private Methods
 
-        protected virtual Entity GetClosetEnemy()
+        protected virtual void OnEntityEntered(Entity entity)
         {
-            if (_detectedEnemies == null || _detectedEnemies.Count == 0)
+            
+        }
+
+        protected virtual void OnEntityExited(Entity entity)
+        {
+            
+        }
+        
+        protected virtual Entity GetClosestEntity()
+        {
+            if (_detectedEntities == null || _detectedEntities.Count == 0)
             {
                 return null;
             }
             
             var minDistance = float.MaxValue;
             Entity closestEnemy = null;
-            foreach (var entity in _detectedEnemies)
+            foreach (var entity in _detectedEntities)
             {
                 var distance = (entity.transform.position - transform.position).sqrMagnitude;
                 if (distance < minDistance)

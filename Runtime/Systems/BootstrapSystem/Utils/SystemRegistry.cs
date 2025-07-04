@@ -19,8 +19,21 @@ namespace SpookyCore.Runtime.Systems
 
         public GameObject GetPrefabForType(Type systemType)
         {
-            var entry = Prefabs.FirstOrDefault(e => e.SystemTypeName == systemType.FullName);
+            var entry = Prefabs.FirstOrDefault(e => e.SystemTypeName == systemType.Name);
             return entry?.Prefab;
         }
+        
+#if UNITY_EDITOR
+
+        private void OnValidate()
+        {
+            foreach (var entry in Prefabs)
+            {
+                var component = entry.Prefab.GetComponent<IBootstrapSystem>();
+                entry.SystemTypeName = component.GetType().Name;
+            }
+        }
+
+#endif
     }
 }

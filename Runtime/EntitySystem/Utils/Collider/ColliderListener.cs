@@ -7,7 +7,7 @@ namespace SpookyCore.Runtime.EntitySystem
     public class ColliderListener : MonoBehaviour
     {
         public EntityCollider ParentEntityCollider;
-        public EntityEnemyDetector ParentEntityEnemyDetector;
+        public EntityTrigger ParentEntityTrigger;
 
         private void OnCollisionEnter2D(Collision2D collision)
         {
@@ -21,12 +21,12 @@ namespace SpookyCore.Runtime.EntitySystem
         
         private void OnTriggerEnter2D(Collider2D other)
         {
-            ParentEntityEnemyDetector?.RegisterTriggerEnter(other);
+            ParentEntityTrigger?.RegisterTriggerEnter(other);
         }
 
         private void OnTriggerExit2D(Collider2D other)
         {
-            ParentEntityEnemyDetector?.RegisterTriggerExit(other);
+            ParentEntityTrigger?.RegisterTriggerExit(other);
         }
     }
 }

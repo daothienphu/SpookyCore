@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace SpookyCore.Runtime.Systems
 {
-    public class ServiceLocator : PersistentMonoSingleton<ServiceLocator>, IBootstrapSystem
+    public class ServiceLocator : PureSingleton<ServiceLocator>, IBootstrapSystem
     {
         #region Fields
 

@@ -244,7 +244,9 @@ namespace SpookyCore.Editor.EntitySystem
                     }
                     else
                     {
-                        Debug.LogWarning($"EntityID {_newEntityName} exists at entry {entryID}. Please choose another EntityID name.");
+                        Debug.LogWarning(entryID == -1
+                            ? "EntityID is blank. Please choose another EntityID."
+                            : $"EntityID {_newEntityName} exists at entry {entryID}. Please choose another EntityID name.");
                     }
                 }
                 EditorGUILayout.EndHorizontal();

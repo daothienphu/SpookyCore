@@ -25,7 +25,7 @@ namespace SpookyCore.Runtime.Systems
                         return found;
                     }
                     
-                    Debug.LogWarning($"[<{typeof(T).Name}>] not found in scene!");
+                    Debug.LogWarning($"<color=cyan>{typeof(T).Name}</color> not found in scene.");
                     return null;
                 }
             }

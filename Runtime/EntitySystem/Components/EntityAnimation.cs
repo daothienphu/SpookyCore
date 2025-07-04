@@ -172,6 +172,10 @@ namespace SpookyCore.Runtime.EntitySystem
         {
             if (_queue.Count == 0)
             {
+                if (Entity.State == Entity.EntityState.Alive)
+                {
+                    PlayAnimation(_defaultState);
+                }
                 return;
             }
 

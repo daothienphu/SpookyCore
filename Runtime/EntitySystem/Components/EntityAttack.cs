@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using SpookyCore.Runtime.Utilities;
+﻿using SpookyCore.Runtime.Utilities;
 using UnityEngine;
 
 namespace SpookyCore.Runtime.EntitySystem
@@ -7,73 +6,77 @@ namespace SpookyCore.Runtime.EntitySystem
     [RequireComponent(typeof(Entity))]
     public class EntityAttack : EntityComponent
     {
-        public EntityAttackConfig AttackConfig;
-        private float _lastAttackTime;
-        private Coroutine _attackCoroutine;
+        [SerializeField] protected WeaponFactory _weaponFactory;
+        [SerializeField] protected bool _setAnimation;
+        protected IWeapon _weapon;
+        protected EntityInputReceiver _input;
+        protected EntityAnimation _animation;
 
-        public void AttackDirection(Vector2 direction)
+        public override void OnAwake()
         {
-            if (CanAttack())
+            _weapon = _weaponFactory.GetWeapon();
+            _input = Entity.Get<EntityInputReceiver>();
+            _animation = Entity.Get<EntityAnimation>();
+        }
+
+        public override void OnUpdate()
+        {
+            _weapon.Tick(Time.deltaTime);
+
+            if (_input && _input.AttackPressed)
             {
-                _attackCoroutine = StartCoroutine(ExecuteAttack(direction.normalized));
+                var position = _input.GetMousePosition();
+                var dir = position - transform.position.V2();
+                AttackDirection(dir);
+            }
+        }
+
+        public void AttackDirection(Vector2 dir)
+        {
+            if (_weapon.IsOnCooldown()) return;
+            
+            _weapon.Attack(transform.position, dir);
+            
+            if (_setAnimation && _animation)
+            {
+                var state = "Attack";
+                if (!_animation.IsAnimationPlaying(state))
+                {
+                    _animation.PlayAnimation(state);
+                }
             }
         }
 
         public void AttackTarget(Entity target)
         {
-            if (target == null) return;
-            var dir = ((Vector2)target.transform.position - (Vector2)transform.position).normalized;
-            AttackDirection(dir);
-        }
+            if (_weapon.IsOnCooldown()) return;
 
-        private bool CanAttack()
-        {
-            return Time.time >= _lastAttackTime + AttackConfig.Cooldown;
-        }
-
-        private IEnumerator ExecuteAttack(Vector2 direction)
-        {
-            _lastAttackTime = Time.time;
-
-            switch (AttackConfig.Type)
+            var dir = target.transform.position - transform.position;
+            
+            _weapon.Attack(transform.position, dir);
+            
+            if (_setAnimation && _animation)
             {
-                case AttackType.Melee:
-                    yield return StartCoroutine(ExecuteMeleeAttack(direction));
-                    break;
-                case AttackType.Ranged:
-                    ExecuteRangedAttack(direction);
-                    break;
-            }
-        }
-
-        private IEnumerator ExecuteMeleeAttack(Vector2 direction)
-        {
-            foreach (var frame in AttackConfig.MeleeSequence.Frames)
-            {
-                yield return new WaitForSeconds(frame.Time);
-
-                var hitboxCenter = (Vector2)transform.position + Vector2.Scale(frame.Offset, direction);
-                var hits = Physics2D.OverlapBoxAll(hitboxCenter, frame.Size, 0f);
-                foreach (var hit in hits)
+                var state = "Attack";
+                if (!_animation.IsAnimationPlaying(state))
                 {
-                    if (hit.TryGetEntity(out var entity) && entity != Entity)
-                    {
-                        // TODO: Apply damage, knockback, effects
-                        Debug.Log($"Hit {entity.name} with {AttackConfig.Damage} damage");
-                    }
+                    _animation.PlayAnimation(state);
                 }
-
-                yield return new WaitForSeconds(frame.Duration);
             }
         }
 
-        private void ExecuteRangedAttack(Vector2 direction)
+        public void Reload()
         {
-            var projectileGO = Instantiate(AttackConfig.ProjectilePrefab, transform.position, Quaternion.identity);
-            if (projectileGO.TryGetComponent(out Projectile projectile))
+            if (_weapon is IRangedWeapon rangedWeapon)
             {
-                projectile.Initialize(direction * AttackConfig.ProjectileSpeed, AttackConfig.Damage, AttackConfig.ProjectileLifetime);
+                rangedWeapon.Reload();
             }
+        }
+
+        public void SetWeaponFactory(WeaponFactory factory)
+        {
+            _weaponFactory = factory;
+            _weapon = _weaponFactory.GetWeapon();
         }
     }
 }

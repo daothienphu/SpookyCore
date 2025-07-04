@@ -1,8 +1,6 @@
-﻿using System.Threading.Tasks;
-
-namespace SpookyCore.Runtime.Systems
+﻿namespace SpookyCore.Runtime.Systems
 {
-    public abstract class PureSingleton<T> : IBootstrapSystem where T : PureSingleton<T>, new()
+    public abstract class PureSingleton<T> where T : IBootstrapSystem, new()
     {
         public static T Instance { get; private set; }
 
@@ -18,19 +16,8 @@ namespace SpookyCore.Runtime.Systems
             }
             
             Instance = new T();
-            Instance.OnInitialize();
 
             return Instance;
-        }
-
-        public virtual void OnInitialize()
-        {
-            
-        }
-        
-        public Task OnBootstrapAsync(BootstrapContext context)
-        {
-            return Task.CompletedTask;
         }
     }
 }

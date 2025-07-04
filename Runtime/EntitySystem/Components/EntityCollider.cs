@@ -14,15 +14,20 @@ namespace SpookyCore.Runtime.EntitySystem
         [field: SerializeField] public bool IsEnabled { get; private set; } = true;
 
         [SerializeField] internal bool _prepareRigidbody2D = true;
-        
-        public bool HasCollided => _collidedEntities.Count > 0;
-        public Entity CollidedEntity => _collidedEntities.Count > 0 ? _collidedEntities[0] : null;
-        public IReadOnlyList<Entity> CollidedEntities => _collidedEntities.AsReadOnly();
+        [SerializeField] private LayerMask _layerMask;
         
         private readonly List<Entity> _collidedEntities = new();
 
         #endregion
 
+        #region Properties
+
+        public bool HasCollided => _collidedEntities.Count > 0;
+        public Entity CollidedEntity => _collidedEntities.Count > 0 ? _collidedEntities[0] : null;
+        public IReadOnlyList<Entity> CollidedEntities => _collidedEntities.AsReadOnly();
+        
+        #endregion
+        
         #region Life Cycle
 
         public override void OnAwake()
@@ -43,7 +48,8 @@ namespace SpookyCore.Runtime.EntitySystem
         
         public virtual void RegisterCollisionEnter(Collision2D collision)
         {
-            if (collision.TryGetEntity(out var entity) && !_collidedEntities.Contains(entity))
+            if (collision.TryGetEntity(out var entity) && 
+                !_collidedEntities.Contains(entity))
             {
                 _collidedEntities.Add(entity);
             }

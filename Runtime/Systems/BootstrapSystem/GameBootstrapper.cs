@@ -86,11 +86,10 @@ namespace SpookyCore.Runtime.Systems
 
         private void OnBootstrapComplete()
         {
-            Debug.Log($"<color=cyan>[Game Bootstrapper]</color> Finished bootstrapping systems.");
-            // if (switchToTestUI)
-            //     GameSessionData.Instance.SwitchToUITest();
-            // else
-            //     GameSessionData.Instance.SwitchToGameplay();
+            Debug.Log("<color=cyan>[Game Bootstrapper]</color> Finished bootstrapping systems.");
+            
+            if (!SceneFlowSystem.Instance) Debug.LogError("<color=cyan>[Game Bootstrapper]</color> Please provide a SceneFlowSystem to switch between scenes.");
+            SceneFlowSystem.Instance?.SwitchToSceneAsync(_switchToTestUI ? SceneID.UITest : SceneID.Gameplay);
         }
     }
 }

@@ -12,11 +12,23 @@ namespace SpookyCore.Runtime.EntitySystem
         ___________________________________PLAYER = 100,
         Player = 101,
 
-        ___________________________________ENEMY = 200,
-        Enemy = 201,
+        ___________________________________PLATFORM = 200,
+        NormalPlatform = 201,
+        MirrorPlatform = 202,
+        GravityPlatform = 203,
+        AutoPlatform = 204,
 
-        ___________________________________PLATFORM = 300,
-        Platform = 301,
+        ___________________________________DOOR = 300,
+        ExitDoor = 301,
+
+        ___________________________________BUTTON = 400,
+        GravityPlatformSpawner = 401,
+
+        ___________________________________TESTENTITIES = 500,
+        TestEntity = 501,
+
+        ___________________________________ENEMY = 600,
+        BasicEnemy = 601,
     }
 
     public static class EntityType
@@ -27,16 +39,34 @@ namespace SpookyCore.Runtime.EntitySystem
             return intValue is > 100 and < 200;
         }
 
-        public static bool IsEnemy(this EntityID entityID)
+        public static bool IsPlatform(this EntityID entityID)
         {
             var intValue = (int)entityID;
             return intValue is > 200 and < 300;
         }
 
-        public static bool IsPlatform(this EntityID entityID)
+        public static bool IsDoor(this EntityID entityID)
         {
             var intValue = (int)entityID;
             return intValue is > 300 and < 400;
+        }
+
+        public static bool IsButton(this EntityID entityID)
+        {
+            var intValue = (int)entityID;
+            return intValue is > 400 and < 500;
+        }
+
+        public static bool IsTestEntities(this EntityID entityID)
+        {
+            var intValue = (int)entityID;
+            return intValue is > 500 and < 600;
+        }
+
+        public static bool IsEnemy(this EntityID entityID)
+        {
+            var intValue = (int)entityID;
+            return intValue is > 600 and < 700;
         }
 
     }

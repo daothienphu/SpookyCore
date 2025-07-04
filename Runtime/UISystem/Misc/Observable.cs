@@ -27,6 +27,19 @@ namespace SpookyCore.Runtime.UI
             }
         }
 
+        public bool TryGetValue(out T value, Action<T> callbackIfNull)
+        {
+            if (_value == null)
+            {
+                Subscribe(callbackIfNull);
+                value = _value;
+                return false;
+            } 
+            
+            value = _value;
+            return true;
+        }
+
         /// <summary>
         /// Invoke this callback if the observable has a value. Else add this callback to OnValueChanged.
         /// </summary>

@@ -4,17 +4,17 @@ using UnityEngine;
 
 namespace SpookyCore.Editor.EntitySystem
 {
-    [CustomEditor(typeof(EntityEnemyDetector), true)]
+    [CustomEditor(typeof(EntityTrigger), true)]
     public class EntityEnemyDetectorEditor : EntityComponentEditor
     {
-        private EntityEnemyDetector _enemyDetector;
+        private EntityTrigger _trigger;
         private readonly string _requiredPath = "Collider/EnemyDetector";
 
         protected override void OnEnable()
         {
             base.OnEnable();
             
-            _enemyDetector = target as EntityEnemyDetector;
+            _trigger = target as EntityTrigger;
             
             CheckAssignReferencesOnEnable(_requiredPath);
         }
@@ -23,7 +23,7 @@ namespace SpookyCore.Editor.EntitySystem
         {
             base.OnInspectorGUI();
 
-            if (!_enemyDetector._colliderListener)
+            if (!_trigger._colliderListener)
             {
                 EditorGUILayout.HelpBox("Please assign a Collider Listener.", MessageType.Error);
             }
@@ -38,21 +38,21 @@ namespace SpookyCore.Editor.EntitySystem
             EditorGUILayout.Space(10);
             EditorGUILayout.LabelField("Detection Info (Entities Only)", EditorStyles.boldLabel);
             
-            EditorGUILayout.Toggle("Has Detected", _enemyDetector.HasDetectedEnemies);
+            EditorGUILayout.Toggle("Has Detected", _trigger.HasTriggered);
             
-            var firstDetected = _enemyDetector.FirstDetectedEnemy;
+            var firstDetected = _trigger.FirstDetectedEntity;
             EditorGUILayout.ObjectField("First Detected Entity", 
                 firstDetected ? firstDetected.gameObject : null, 
                 typeof(GameObject), true);
 
-            var closestDetected = _enemyDetector.ClosestDetectedEnemy;
+            var closestDetected = _trigger.ClosestDetectedEnemy;
             EditorGUILayout.ObjectField("Closest Detected Entity", 
                 closestDetected ? closestDetected.gameObject : null,
                 typeof(GameObject), true);
             
             EditorGUILayout.LabelField("All Detected Entities:");
             EditorGUI.indentLevel++;
-            foreach (var entity in _enemyDetector.DetectedEnemies)
+            foreach (var entity in _trigger.DetectedEnemies)
             {
                 EditorGUILayout.ObjectField(entity.name, entity.gameObject, typeof(GameObject), true);
             }
@@ -61,8 +61,8 @@ namespace SpookyCore.Editor.EntitySystem
 
         protected override void AssignReferences(Transform downMostTransform)
         {
-            if (_enemyDetector._colliderListener &&
-                _enemyDetector._colliderListener.ParentEntityEnemyDetector == _enemyDetector)
+            if (_trigger._colliderListener &&
+                _trigger._colliderListener.ParentEntityTrigger == _trigger)
             {
                 return;
             }
@@ -80,10 +80,10 @@ namespace SpookyCore.Editor.EntitySystem
                 listener = Undo.AddComponent<ColliderListener>(downMostTransform.gameObject);
             }
 
-            listener.ParentEntityEnemyDetector = _enemyDetector;
-            _enemyDetector._colliderListener = listener;
+            listener.ParentEntityTrigger = _trigger;
+            _trigger._colliderListener = listener;
             
-            EditorUtility.SetDirty(_enemyDetector.gameObject);
+            EditorUtility.SetDirty(_trigger.gameObject);
             AssetDatabase.SaveAssets();
         }
     }

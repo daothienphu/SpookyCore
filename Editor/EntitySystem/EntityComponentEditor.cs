@@ -104,7 +104,7 @@ namespace SpookyCore.Editor.EntitySystem
             }
             
             Undo.CollapseUndoOperations(group);
-            Debug.Log($"<color=cyan>{_component.GetType().Name}</color> of <color=cyan>{_entity.GetType().Name}</color> created the hierarchy <color=cyan>{_entity.name}/{path}</color>");
+            Debug.Log($"<color=cyan>{_component.GetType().Name}</color> of <color=cyan>{_entity.gameObject.name}</color> created the hierarchy <color=cyan>{_entity.name}/{path}</color>");
             
             onPathCreated?.Invoke(root);
         }

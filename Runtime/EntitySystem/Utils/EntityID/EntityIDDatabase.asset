@@ -16,9 +16,21 @@ MonoBehaviour:
   - CategoryName: Player
     Entries:
     - Player
-  - CategoryName: Enemy
-    Entries:
-    - Enemy
   - CategoryName: Platform
     Entries:
-    - Platform
+    - NormalPlatform
+    - MirrorPlatform
+    - GravityPlatform
+    - AutoPlatform
+  - CategoryName: Door
+    Entries:
+    - ExitDoor
+  - CategoryName: Button
+    Entries:
+    - GravityPlatformSpawner
+  - CategoryName: TestEntities
+    Entries:
+    - TestEntity
+  - CategoryName: Enemy
+    Entries:
+    - BasicEnemy

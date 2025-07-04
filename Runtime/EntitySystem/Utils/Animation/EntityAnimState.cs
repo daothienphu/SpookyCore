@@ -6,9 +6,18 @@ namespace SpookyCore.Runtime.EntitySystem
     {
         None,
         BasicEnemy_Idle,
+        BasicEnemy_Walk,
+        BasicEnemy_Run,
+        BasicEnemy_Jump,
+        BasicEnemy_Attack,
+        BasicEnemy_Damaged,
+        BasicEnemy_Dead,
         Player_Idle,
         Player_Walk,
         Player_Run,
         Player_Jump,
+        Player_Attack,
+        Player_Damaged,
+        Player_Dead,
     }
 }

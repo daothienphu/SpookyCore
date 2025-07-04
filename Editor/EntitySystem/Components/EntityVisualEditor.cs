@@ -29,9 +29,9 @@ namespace SpookyCore.Editor.EntitySystem
         {
             base.OnInspectorGUI();
 
-            if (!_visual.MainVisualRenderer || !_visual.MainVisualTransform)
+            if (!_visual.MainVisualTransform)
             {
-                EditorGUILayout.HelpBox("Please assign both MainVisualTransform and MainVisualRenderer.", MessageType.Error);
+                EditorGUILayout.HelpBox("Please assign the MainVisualRenderer.", MessageType.Error);
             }
             
             CheckBuildingHierarchyOnInspectorGUI(_requiredPath, "Build Visual Hierarchy");
@@ -39,7 +39,7 @@ namespace SpookyCore.Editor.EntitySystem
 
         protected override void AssignReferences(Transform downMostTransform)
         {
-            if (_visual.MainVisualTransform && _visual.MainVisualRenderer)
+            if (_visual.MainVisualTransform)
             {
                 return;
             }

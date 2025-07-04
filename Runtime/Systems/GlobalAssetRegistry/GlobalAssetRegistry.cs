@@ -6,21 +6,21 @@ namespace SpookyCore.Runtime.Systems
 {
     public class GlobalAssetRegistry : PersistentMonoSingleton<GlobalAssetRegistry>, IBootstrapSystem
     {
-        [SerializeField] private EntityPrefabRegistry _entityPrefabRegistry;
-        [SerializeField] private ScriptableObjectRegistry _soRegistry;
+        [SerializeField] private EntityPrefabRegistry _prefabs;
+        [SerializeField] private ScriptableObjectRegistry _scriptableObjects;
 
-        public GameObject GetPrefab(EntityID key) => Instance._entityPrefabRegistry.Get(key);
+        public GameObject GetPrefab(EntityID key) => Instance._prefabs.Get(key);
 
         public bool TryGetPrefab(EntityID key, out GameObject prefab)
         {
             prefab = GetPrefab(key);
-            return prefab != null;
+            return prefab;
         }
-        public T GetSO<T>(string key) where T : ScriptableObject => Instance._soRegistry.Get<T>(key);
+        public T GetSO<T>(string key) where T : ScriptableObject => Instance._scriptableObjects.Get<T>(key);
         
         public Task OnBootstrapAsync(BootstrapContext context)
         {
-            Debug.Log("<color=cyan>[Global Asset Registry]</color> system ready.");
+            Debug.Log("<color=cyan>[Global Asset Registry]</color> ready.");
             return Task.CompletedTask;
         }
     }

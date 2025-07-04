@@ -1,15 +1,17 @@
-﻿using UnityEngine;
+﻿using SpookyCore.Runtime.Systems;
+using UnityEngine;
 
 namespace SpookyCore.Runtime.EntitySystem
 {
     public class EntityInputReceiver : EntityComponent
     {
-        [field: SerializeField] public Vector2 MoveInput { get; private set; }
-        [field: SerializeField] public bool JumpPressed { get; private set; }
-        [field: SerializeField] public bool JumpHeld { get; private set; }
-        [field: SerializeField] public bool RunHeld { get; private set; }
-        [field: SerializeField] public bool DashPressed { get; private set; }
-        
+        [field: SerializeField] public Vector2 MoveInput { get; protected set; }
+        [field: SerializeField] public bool JumpPressed { get; protected set; }
+        [field: SerializeField] public bool JumpHeld { get; protected set; }
+        [field: SerializeField] public bool RunHeld { get; protected set; }
+        [field: SerializeField] public bool DashPressed { get; protected set; }
+        [field: SerializeField] public bool AttackPressed { get; protected set; }
+
         [Header("Settings")]
         public bool _verticalMovementEnabled;
         public bool _canJump;
@@ -44,7 +46,7 @@ namespace SpookyCore.Runtime.EntitySystem
         {
             if (!_useNewInputSystem)
             {
-                ReadInput();
+                ReadInputOldInputSystem();
             }
         }
 
@@ -53,12 +55,20 @@ namespace SpookyCore.Runtime.EntitySystem
         #region Public Methods
 
         public virtual void ResetJump() => JumpPressed = false;
+        
+        public virtual Vector2 GetMousePosition(bool worldSpace = true)
+        {
+            var position = Input.mousePosition;
+            return worldSpace
+                ? GameManager.Instance.MainCamera.ScreenToWorldPoint(position)
+                : position;
+        }
 
         #endregion
         
         #region Private Methods
 
-        protected virtual void ReadInput()
+        protected virtual void ReadInputOldInputSystem()
         {
             var x = Input.GetAxisRaw("Horizontal");
             var y = _verticalMovementEnabled ? Input.GetAxisRaw("Vertical") : 0f;
@@ -68,6 +78,7 @@ namespace SpookyCore.Runtime.EntitySystem
             JumpHeld = Input.GetButton("Jump"); //For variable jump height
             RunHeld = Input.GetKey(KeyCode.LeftShift);
             DashPressed = Input.GetKeyDown(KeyCode.K);
+            AttackPressed = Input.GetButtonDown("Fire1");
         }
         
         protected virtual void OnMovementPressedHandler(Vector2 movement)

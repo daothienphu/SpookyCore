@@ -34,6 +34,7 @@ namespace SpookyCore.Runtime.EntitySystem
         [field: SerializeField] public EntityState State { get; private set; }
         [Tooltip("Use Unity Awake and Start event calls, used when object is placed in the scene instead of spawned from a pool.")]
         [SerializeField] private bool _useUnityAwakeAndStart;
+        [SerializeField] private bool _registerAsPlayer;
         [SerializeField] private List<EntityComponent> _componentsList = new();  
         
         private Dictionary<Type, EntityComponent> _componentsDict = new();
@@ -104,7 +105,15 @@ namespace SpookyCore.Runtime.EntitySystem
             }
 
             _entityStateEvent = new EntityStateEvent(EntityState.Default, EntityState.Default);
-            _poolSystem = PoolSystem.Instance;
+            AIContext = new AIContext
+            {
+                Entity = this
+            };
+
+            if (!_useUnityAwakeAndStart)
+            {
+                _poolSystem = PoolSystem.Instance;
+            }
             
             RefreshComponentsCache();
             
@@ -112,6 +121,11 @@ namespace SpookyCore.Runtime.EntitySystem
             {
                 component.Init(this);
                 component.OnAwake();
+            }
+
+            if (_registerAsPlayer && GameManager.Instance)
+            {
+                GameManager.Instance.RegisterPlayer(this);
             }
         }
 
@@ -170,8 +184,15 @@ namespace SpookyCore.Runtime.EntitySystem
                 if (!component || !component.enabled) continue;
                 component.OnAfterDead();
             }
-            
-            _poolSystem?.Return(ID, this);
+
+            if (!_useUnityAwakeAndStart)
+            {
+                _poolSystem?.Return(ID, this);
+            }
+            else
+            {
+                Destroy(gameObject);
+            }
         }
 
         #endregion
